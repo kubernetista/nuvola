@@ -2,11 +2,14 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: argocd
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
   - repoURL: https://argoproj.github.io/argo-helm
-    chart: argo/argo-cd
+    chart: argo-cd
     targetRevision: 7.6.8
     helm:
       releaseName: argocd
@@ -19,3 +22,7 @@ spec:
   destination:
     name: "in-cluster"
     namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
