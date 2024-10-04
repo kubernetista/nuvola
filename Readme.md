@@ -1,4 +1,4 @@
-# Install Nuvola environment
+# Set up Nuvola environment
 
 ## Install ArgoCD with Helm
 
