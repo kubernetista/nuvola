@@ -1,0 +1,426 @@
+## @param global.imageRegistry global image registry override
+## @param global.imagePullSecrets global image pull secrets override; can be extended by `imagePullSecrets`
+## @param global.storageClass global storage class override
+## @param global.hostAliases global hostAliases which will be added to the pod's hosts files
+global:
+  imageRegistry: ""
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  storageClass: ""
+  hostAliases: []
+  # - ip: 192.168.137.2
+  #   hostnames:
+  #   - example.com
+
+## @param replicaCount number of replicas for the deployment
+replicaCount: 1
+
+## @param clusterDomain cluster domain
+clusterDomain: cluster.local
+
+## @param imagePullSecrets Secret to use for pulling the image
+imagePullSecrets: []
+
+## @section Service
+service:
+  ## @param service.http.type Kubernetes service type for web traffic
+  ## @param service.http.port Port number for web traffic
+  ## @param service.http.clusterIP ClusterIP setting for http autosetup for deployment is None
+  ## @param service.http.loadBalancerIP LoadBalancer IP setting
+  ## @param service.http.nodePort NodePort for http service
+  ## @param service.http.externalTrafficPolicy If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.http.externalIPs External IPs for service
+  ## @param service.http.ipFamilyPolicy HTTP service dual-stack policy
+  ## @param service.http.ipFamilies HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
+  ## @param service.http.loadBalancerSourceRanges Source range filter for http loadbalancer
+  ## @param service.http.annotations HTTP service annotations
+  ## @param service.http.labels HTTP service additional labels
+  ## @param service.http.loadBalancerClass Loadbalancer class
+  http:
+    type: ClusterIP
+    port: 3000
+    clusterIP: None
+    loadBalancerIP:
+    nodePort:
+    externalTrafficPolicy:
+    externalIPs:
+    ipFamilyPolicy:
+    ipFamilies:
+    loadBalancerSourceRanges: []
+    annotations: {}
+    labels: {}
+    loadBalancerClass:
+  ## @param service.ssh.type Kubernetes service type for ssh traffic
+  ## @param service.ssh.port Port number for ssh traffic
+  ## @param service.ssh.clusterIP ClusterIP setting for ssh autosetup for deployment is None
+  ## @param service.ssh.loadBalancerIP LoadBalancer IP setting
+  ## @param service.ssh.nodePort NodePort for ssh service
+  ## @param service.ssh.externalTrafficPolicy If `service.ssh.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.ssh.externalIPs External IPs for service
+  ## @param service.ssh.ipFamilyPolicy SSH service dual-stack policy
+  ## @param service.ssh.ipFamilies SSH service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
+  ## @param service.ssh.hostPort HostPort for ssh service
+  ## @param service.ssh.loadBalancerSourceRanges Source range filter for ssh loadbalancer
+  ## @param service.ssh.annotations SSH service annotations
+  ## @param service.ssh.labels SSH service additional labels
+  ## @param service.ssh.loadBalancerClass Loadbalancer class
+  ssh:
+    type: ClusterIP
+    # type: LoadBalancer
+    port: 2222
+    clusterIP: None
+    loadBalancerIP:
+    nodePort:
+    externalTrafficPolicy:
+    externalIPs:
+    ipFamilyPolicy:
+    ipFamilies:
+    hostPort:
+    loadBalancerSourceRanges: []
+    annotations: {}
+    labels: {}
+    loadBalancerClass:
+
+## @section Ingress
+## @param ingress.enabled Enable ingress
+## @param ingress.className Ingress class name
+## @param ingress.annotations Ingress annotations
+## @param ingress.hosts[0].host Default Ingress host
+## @param ingress.hosts[0].paths[0].path Default Ingress path
+## @param ingress.hosts[0].paths[0].pathType Ingress path type
+## @param ingress.tls Ingress tls settings
+## @extra ingress.apiVersion Specify APIVersion of ingress object. Mostly would only be used for argocd.
+ingress:
+  enabled: true
+  # className: nginx
+  className:
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: git.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: gitea.localhost
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - git.example.com
+  # Mostly for argocd or any other CI that uses `helm template | kubectl apply` or similar
+  # If helm doesn't correctly detect your ingress API version you can set it here.
+  # apiVersion: networking.k8s.io/v1
+
+## @section deployment
+#
+## @param resources Kubernetes resources
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+## @param deployment.env  Additional environment variables to pass to containers
+## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
+## @param deployment.labels Labels for the deployment
+## @param deployment.annotations Annotations for the Gitea deployment to be created
+deployment:
+  env:
+    []
+    # - name: VARIABLE
+    #   value: my-value
+  terminationGracePeriodSeconds: 60
+  labels: {}
+  annotations: {}
+
+## @section ServiceAccount
+
+## @param serviceAccount.create Enable the creation of a ServiceAccount
+## @param serviceAccount.name Name of the created ServiceAccount, defaults to release name. Can also link to an externally provided ServiceAccount that should be used.
+## @param serviceAccount.automountServiceAccountToken Enable/disable auto mounting of the service account token
+## @param serviceAccount.imagePullSecrets Image pull secrets, available to the ServiceAccount
+## @param serviceAccount.annotations Custom annotations for the ServiceAccount
+## @param serviceAccount.labels Custom labels for the ServiceAccount
+serviceAccount:
+  create: false
+  name: ""
+  automountServiceAccountToken: false
+  imagePullSecrets: []
+  # - name: private-registry-access
+  annotations: {}
+  labels: {}
+
+## @section Persistence
+#
+## @param persistence.enabled Enable persistent storage
+## @param persistence.create Whether to create the persistentVolumeClaim for shared storage
+## @param persistence.mount Whether the persistentVolumeClaim should be mounted (even if not created)
+## @param persistence.claimName Use an existing claim to store repository information
+## @param persistence.size Size for persistence to store repo information
+## @param persistence.accessModes AccessMode for persistence
+## @param persistence.labels Labels for the persistence volume claim to be created
+## @param persistence.annotations.helm.sh/resource-policy Resource policy for the persistence volume claim
+## @param persistence.storageClass Name of the storage class to use
+## @param persistence.subPath Subdirectory of the volume to mount at
+## @param persistence.volumeName Name of persistent volume in PVC
+persistence:
+  enabled: true
+  create: true
+  mount: true
+  claimName: gitea-shared-storage
+  size: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  labels: {}
+  storageClass:
+  subPath:
+  volumeName: ""
+  annotations:
+    helm.sh/resource-policy: keep
+
+## @param extraVolumes Additional volumes to mount to the Gitea deployment
+extraVolumes: []
+# - name: postgres-ssl-vol
+#   secret:
+#     secretName: gitea-postgres-ssl
+
+## @param extraContainerVolumeMounts Mounts that are only mapped into the Gitea runtime/main container, to e.g. override custom templates.
+extraContainerVolumeMounts: []
+
+## @param extraInitVolumeMounts Mounts that are only mapped into the init-containers. Can be used for additional preconfiguration.
+extraInitVolumeMounts: []
+
+## @deprecated The extraVolumeMounts variable has been split two:
+## - extraContainerVolumeMounts
+## - extraInitVolumeMounts
+## As an example, can be used to mount a client cert when connecting to an external Postgres server.
+## @param extraVolumeMounts **DEPRECATED** Additional volume mounts for init containers and the Gitea main container
+extraVolumeMounts: []
+# - name: postgres-ssl-vol
+#   readOnly: true
+#   mountPath: "/pg-ssl"
+
+## @section Init
+## @param initPreScript Bash shell script copied verbatim to the start of the init-container.
+initPreScript: ""
+#
+# initPreScript: |
+#   mkdir -p /data/git/.postgresql
+#   cp /pg-ssl/* /data/git/.postgresql/
+#   chown -R git:git /data/git/.postgresql/
+#   chmod 400 /data/git/.postgresql/postgresql.key
+
+## @section Gitea
+#
+gitea:
+  ## @param gitea.admin.username Username for the Gitea admin user
+  ## @param gitea.admin.existingSecret Use an existing secret to store admin user credentials
+  ## @param gitea.admin.password Password for the Gitea admin user
+  ## @param gitea.admin.email Email for the Gitea admin user
+  ## @param gitea.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated
+  admin:
+    existingSecret: gitea-admin-secret
+    email: "aruba-demo@git.localhost"
+    passwordMode: keepUpdated
+    # existingSecret:
+    #   username: gitea_admin
+    #   password: r8sA8CPHD9!bt6d
+    #   email: "gitea@local.domain"
+    #   passwordMode: keepUpdated
+
+  ## @param gitea.metrics.enabled Enable Gitea metrics
+  ## @param gitea.metrics.serviceMonitor.enabled Enable Gitea metrics service monitor
+  metrics:
+    enabled: false
+    serviceMonitor:
+      enabled: false
+      #  additionalLabels:
+      #    prometheus-release: prom1
+
+  ## @param gitea.config.server.SSH_PORT SSH port for rootlful Gitea image
+  ## @param gitea.config.server.SSH_LISTEN_PORT SSH port for rootless Gitea image
+  config:
+    # values in the DEFAULT section
+    # (https://forgejo.org/docs/latest/admin/config-cheat-sheet/#overall-default)
+    # are un-namespaced
+
+    ## @param gitea.config.APP_NAME Application name, used in the page title
+    #  APP_NAME: "Gitea: Git with a cup of tea"
+    #  RUN_MODE: dev
+    server:
+      SSH_PORT: 22 # rootful image
+      SSH_LISTEN_PORT: 2222 # rootless image
+      ROOT_URL: http://git.localhost:8000
+  #
+  #  security:
+  #    PASSWORD_COMPLEXITY: spec
+
+    ## @param gitea.config.repository General repository settings
+    # repository: {}
+    repository:
+      ENABLE_PUSH_CREATE_USER: true
+      ENABLE_PUSH_CREATE_ORG: true
+      # https://forgejo.org/docs/latest/user/push-to-create/
+
+    ## @param gitea.config.cors Cross-origin resource sharing settings
+    cors: {}
+
+    ## @param gitea.config.ui User interface settings
+    ui: {}
+
+
+    ## @param gitea.config.database Database configuration (only necessary with an [externally managed DB](https://code.forgejo.org/forgejo-helm/forgejo-helm#external-database)).
+    database: {}
+    # database:
+    #   DB_TYPE: postgres # supported values are mysql, postgres, mssql, sqlite3
+    #   HOST: forgejo-postgresql-rw.forgejo.svc.cluster.local:5432
+    #   NAME: gitea
+    #   # USER: postgres
+    #   # PASSWD: password
+    #   USER: "gitea"
+    #   PASSWD: "gitea"
+    #   # SCHEMA: gitea
+
+    #   # host: forgejo-postgresql-rw.forgejo.svc.cluster.local
+    #   # port: 5432
+    #   # username: "postgresql"
+    #   # password: "password"
+
+  ## @param gitea.additionalConfigSources Additional configuration from secret or configmap
+  additionalConfigSources: []
+  #   - secret:
+  #       secretName: gitea-app-ini-oauth
+  #   - configMap:
+  #       name: gitea-app-ini-plaintext
+
+  ## @param gitea.additionalConfigFromEnvs Additional configuration sources from environment variables
+  additionalConfigFromEnvs: []
+
+  ## @param gitea.ssh.logLevel Configure OpenSSH's log level. Only available for root-based Gitea image.
+  ssh:
+    logLevel: "INFO"
+
+## @section Redis&reg; Cluster
+## @descriptionStart
+## Redis&reg; Cluster is loaded as a dependency from [Bitnami](https://github.com/bitnami/charts/tree/master/bitnami/redis-cluster) if enabled in the values.
+## Complete Configuration can be taken from their website.
+## Redis cluster and [Redis](#redis) cannot be enabled at the same time.
+## @descriptionEnd
+#
+## @param redis-cluster.enabled Enable redis cluster
+## @param redis-cluster.usePassword Whether to use password authentication
+## @param redis-cluster.cluster.nodes Number of redis cluster master nodes
+## @param redis-cluster.cluster.replicas Number of redis cluster master node replicas
+redis-cluster:
+  enabled: false
+  usePassword: false
+  cluster:
+    nodes: 3 # default: 6
+    replicas: 0 # default: 1
+
+## @section Redis&reg;
+## @descriptionStart
+## Redis&reg; is loaded as a dependency from [Bitnami](https://github.com/bitnami/charts/tree/master/bitnami/redis) if enabled in the values.
+## Complete Configuration can be taken from their website.
+## Redis and [Redis cluster](#redis-cluster) cannot be enabled at the same time.
+## @descriptionEnd
+#
+## @param redis.enabled Enable redis standalone or replicated
+## @param redis.architecture Whether to use standalone or replication
+## @param redis.global.redis.password Required password
+## @param redis.master.count Number of Redis master instances to deploy
+redis:
+  enabled: true
+  architecture: standalone
+  global:
+    redis:
+      password: changeme
+  master:
+    count: 1
+
+## @section PostgreSQL HA
+#
+## @param postgresql-ha.enabled Enable PostgreSQL HA
+## @param postgresql-ha.postgresql.password Password for the `gitea` user (overrides `auth.password`)
+## @param postgresql-ha.global.postgresql.database Name for a custom database to create (overrides `auth.database`)
+## @param postgresql-ha.global.postgresql.username Name for a custom user to create (overrides `auth.username`)
+## @param postgresql-ha.global.postgresql.password Name for a custom password to create (overrides `auth.password`)
+## @param postgresql-ha.postgresql.repmgrPassword Repmgr Password
+## @param postgresql-ha.postgresql.postgresPassword postgres Password
+## @param postgresql-ha.pgpool.adminPassword pgpool adminPassword
+## @param postgresql-ha.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
+## @param postgresql-ha.persistence.size PVC Storage Request for PostgreSQL HA volume
+postgresql-ha:
+  global:
+    postgresql:
+      database: gitea
+      password: gitea
+      username: gitea
+  enabled: false
+  postgresql:
+    repmgrPassword: changeme2
+    postgresPassword: changeme1
+    password: changeme4
+  pgpool:
+    adminPassword: changeme3
+  service:
+    ports:
+      postgresql: 5432
+  persistence:
+    size: 10Gi
+
+## @section PostgreSQL
+#
+## @param postgresql.enabled Enable PostgreSQL
+## @param postgresql.global.postgresql.auth.password Password for the `gitea` user (overrides `auth.password`)
+## @param postgresql.global.postgresql.auth.database Name for a custom database to create (overrides `auth.database`)
+## @param postgresql.global.postgresql.auth.username Name for a custom user to create (overrides `auth.username`)
+## @param postgresql.global.postgresql.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
+## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        password: gitea
+        database: gitea
+        username: gitea
+      service:
+        ports:
+          postgresql: 5432
+  primary:
+    persistence:
+      size: 10Gi
+
+# By default, removed or moved settings that still remain in a user defined values.yaml will cause Helm to fail running the install/update.
+# Set it to false to skip this basic validation check.
+## @section Advanced
+## @param checkDeprecation Set it to false to skip this basic validation check.
+## @param test.enabled Set it to false to disable test-connection Pod.
+## @param test.image.name Image name for the wget container used in the test-connection Pod.
+## @param test.image.tag Image tag for the wget container used in the test-connection Pod.
+checkDeprecation: true
+test:
+  enabled: true
+  image:
+    name: busybox
+    tag: latest
+
+## @param extraDeploy Array of extra objects to deploy with the release
+##
+extraDeploy: []
+
