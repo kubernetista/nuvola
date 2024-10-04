@@ -22,7 +22,7 @@ spec:
     ref: values
   destination:
     name: "in-cluster"
-    namespace: gitea
+    namespace: git
   syncPolicy:
     automated:
       prune: false
