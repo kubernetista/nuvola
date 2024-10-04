@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: python-hello-aruba
+  namespace: argocd
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: python-hello-aruba
+  project: default
+  source:
+    path: deploy/base
+    repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/python-hello-aruba.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
