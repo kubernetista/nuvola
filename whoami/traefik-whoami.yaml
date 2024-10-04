@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+ name: traefik-whoami
+ namespace: default
+spec:
+ ports:
+   - name: "8000"
+     port: 8000
+     targetPort: web
+ selector:
+   app: traefik-whoami
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: traefik-whoami
+ namespace: default
+spec:
+ selector:
+   matchLabels:
+     app: traefik-whoami
+ template:
+   metadata:
+     labels:
+       app: traefik-whoami
+   spec:
+     containers:
+       - name: traefik-whoami
+         image: registry.localhost:5000/traefik-whoami
+         ports:
+           - name: web
+             containerPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: traefik-whoami
+  namespace: default
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: "whoami.localhost"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: traefik-whoami
+                port:
+                  number: 8000
