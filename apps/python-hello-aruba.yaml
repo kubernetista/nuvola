@@ -6,7 +6,6 @@ metadata:
 spec:
   destination:
     server: https://kubernetes.default.svc
-    namespace: python-hello-aruba
   project: default
   source:
     path: deploy/base
