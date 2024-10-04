@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apps
+  namespace: argocd
+spec:
+  destination:
+    name: "in-cluster"
+  project: default
+  source:
+    path: apps/
+    repoURL: https://github.com/kubernetista/nuvola.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
