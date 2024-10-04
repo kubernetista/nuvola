@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jenkins
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: https://charts.bitnami.com/bitnami
+    chart: jenkins
+    # helm search repo bitnami/jenkins --versions | head
+    targetRevision: 13.4.23
+    helm:
+      releaseName: jenkins
+      valueFiles:
+      - $values/jenkins/values.yaml
+      # - values.yaml
+  - repoURL: https://github.com/kubernetista/nuvola.git
+    targetRevision: main
+    ref: values
+  destination:
+    name: "in-cluster"
+    namespace: jenkins
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
