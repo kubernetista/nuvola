@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea-runner
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    path: gitea-runner
+    repoURL: https://github.com/kubernetista/nuvola.git
+    targetRevision: main
+    # targetRevision: HEAD
+  destination:
+    name: "in-cluster"
+    namespace: git
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
