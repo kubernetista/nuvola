@@ -47,3 +47,39 @@ git remote add local http://git.localhost:8000/aruba-demo/$(basename "${PWD}").g
 # Push and create a public repo
 git push -o repo.private=false -u local main
 ```
+
+## Configure Gitea Runner
+
+Get the Runner Registration Token
+
+```sh
+# for the gitea instance
+open <http://git.localhost:8000/admin/actions/runners>
+
+# or for the current user
+open <http://git.localhost:8000/user/settings/actions/runners>
+
+# Click 🖱️ on "Create new Runner" and copy 📑 the REGISTRATION TOKEN
+
+
+# Set the RUNNER_TOKEN env variable
+export RUNNER_TOKEN="<token>"
+echo ${RUNNER_TOKEN}
+
+# Base64 encode the token
+# export RUNNER_TOKEN_B64=$(echo ${RUNNER_TOKEN} | base64)
+# echo ${RUNNER_TOKEN_B64}
+
+# Update 📋  the token in the Runner deployment
+./scripts/gitea-runner.sh
+# yq
+
+# Commmit the updated token deployment
+git add gitea-runner/rootless.yaml
+git commit -m "update gitea-runner token"
+
+# Git push, either to the remote repo or to the local gitea instance
+git push local main
+# git push origin main
+
+```
