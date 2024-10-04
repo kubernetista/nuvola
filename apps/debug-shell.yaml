@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: debug-shell
+  namespace: argocd
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    helm:
+      valueFiles:
+      - ../values.yaml
+    path: debug-shell
+    repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/debug-shell.git
