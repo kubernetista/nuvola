@@ -10,6 +10,7 @@ spec:
   sources:
   - repoURL: https://argoproj.github.io/argo-helm
     chart: argo-cd
+    # helm search repo argo/argo-cd --versions | head
     targetRevision: 7.6.8
     helm:
       releaseName: argocd
