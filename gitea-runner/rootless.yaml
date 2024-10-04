@@ -60,7 +60,7 @@ spec:
           value: http://gitea-http.git.svc.cluster.local:3000
           # value: http://gitea-http.gitea.svc.cluster.local:3000
         - name: GITEA_RUNNER_REGISTRATION_TOKEN
-          value: "OIYjLuCSUMQUdSAhV8RMOuNzzn47xwDuIgpFOvSA"
+          value: "lAXqh0tRlUPUNvsUKPrIL3Ul7NeRoBCS5XkE89Cj"
           # valueFrom:
           #   secretKeyRef:
           #     name: runner-secret
