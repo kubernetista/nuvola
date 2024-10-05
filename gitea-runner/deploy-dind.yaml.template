@@ -31,10 +31,11 @@ spec:
         env:
         - name: DOCKER_HOST
           value: tcp://localhost:2376
-        - name: DOCKER_CERT_PATH
-          value: /certs/client
-        - name: DOCKER_TLS_VERIFY
-          value: "1"
+          value: unix:///run/user/1000/docker.sock
+        # - name: DOCKER_CERT_PATH
+        #   value: /certs/client
+        # - name: DOCKER_TLS_VERIFY
+        #   value: "1"
         - name: GITEA_INSTANCE_URL
           value: http://gitea-http.git.svc.cluster.local:3000
         - name: GITEA_RUNNER_REGISTRATION_TOKEN
@@ -56,7 +57,9 @@ spec:
             #   memory: "256Mi"
             #   cpu: "250m"
       - name: daemon
-        image: docker:23.0.6-dind
+        image: docker:26-dind
+        # image: docker:23.0.6-dind
+        # check: https://hub.docker.com/_/docker/tags?name=dind
         env:
         - name: DOCKER_TLS_CERTDIR
           value: /certs
