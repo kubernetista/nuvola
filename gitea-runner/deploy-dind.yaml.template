@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: act-runner-dind
+  name: act-runner-dind
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: act-runner-dind
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: act-runner-dind
+    spec:
+      restartPolicy: Always
+      volumes:
+      - name: runner-data
+        persistentVolumeClaim:
+          claimName: act-runner-dind-vol
+      - name: docker-certs
+        emptyDir: {}
+      containers:
+      - name: runner
+        image: gitea/act_runner:nightly
+        imagePullPolicy: Always
+        # command: ["sh", "-c", "while ! nc -z localhost 2376 </dev/null; do echo 'waiting for docker daemon...'; sleep 5; done; /sbin/tini -- /opt/act/run.sh"]
+        env:
+        - name: DOCKER_HOST
+          value: tcp://localhost:2376
+        - name: DOCKER_CERT_PATH
+          value: /certs/client
+        - name: DOCKER_TLS_VERIFY
+          value: "1"
+        - name: GITEA_INSTANCE_URL
+          value: http://gitea-http.git.svc.cluster.local:3000
+        - name: GITEA_RUNNER_REGISTRATION_TOKEN
+          value: "${RUNNER_TOKEN}"
+          # valueFrom:
+          #   secretKeyRef:
+          #     name: runner-secret
+          #     key: token
+        volumeMounts:
+        - name: docker-certs
+          mountPath: /certs
+        - name: runner-data
+          mountPath: /data
+        resources: {}
+            # limits:
+            #   memory: "512Mi"
+            #   cpu: "500m"
+            # requests:
+            #   memory: "256Mi"
+            #   cpu: "250m"
+      - name: daemon
+        image: docker:23.0.6-dind
+        env:
+        - name: DOCKER_TLS_CERTDIR
+          value: /certs
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker-certs
+          mountPath: /certs
+        resources: {}
+            # limits:
+            #   memory: "512Mi"
+            #   cpu: "500m"
+            # requests:
+            #   memory: "256Mi"
+            #   cpu: "250m"
