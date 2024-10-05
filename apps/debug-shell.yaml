@@ -14,3 +14,7 @@ spec:
       - ../values.yaml
     path: debug-shell
     repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/debug-shell.git
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
