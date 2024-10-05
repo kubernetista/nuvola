@@ -5,8 +5,6 @@
 singleNamespace: false
 
 workflow:
-  # -- Deprecated; use controller.workflowNamespaces instead.
-  namespace:
   serviceAccount:
     # -- Specifies whether a service account should be created
     create: true
@@ -46,8 +44,8 @@ controller:
     # -- Additional ingress labels
     labels: {}
     # -- Defines which ingress controller will implement the resource
-    # ingressClassName: ""
-    ingressClassName: "traefik"
+    ingressClassName: ""
+    # ingressClassName: "traefik"
 
     # -- List of ingress hosts
     ## Hostnames must be provided if Ingress is enabled.
