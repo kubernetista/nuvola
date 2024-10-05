@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-events
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL:  https://argoproj.github.io/argo-helm
+    chart: argo-events
+    # helm search repo argo/argo-events --versions | head
+    targetRevision: 2.4.8
+    helm:
+      releaseName: argo-events
+      valueFiles:
+      - $values/argo-events/values.yaml
+      # - values.yaml
+  - repoURL: https://github.com/kubernetista/nuvola.git
+    targetRevision: main
+    ref: values
+  destination:
+    name: "in-cluster"
+    namespace: argo
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
