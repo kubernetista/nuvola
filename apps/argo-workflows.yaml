@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-workflows
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL:  https://argoproj.github.io/argo-helm
+    chart: argo-workflows
+    # helm search repo argo/argo-workflows --versions | head
+    targetRevision: 0.42.5
+    helm:
+      releaseName: argo-workflows
+      valueFiles:
+      - $values/argo-workflows/values.yaml
+      # - values.yaml
+  - repoURL: https://github.com/kubernetista/nuvola.git
+    targetRevision: main
+    ref: values
+  destination:
+    name: "in-cluster"
+    namespace: argo
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
