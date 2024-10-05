@@ -19,7 +19,7 @@ spec:
       volumes:
       - name: runner-data
         persistentVolumeClaim:
-          claimName: act-runner-dind-vol
+          claimName: act-runner-vol
       securityContext:
         fsGroup: 1000
       containers:
