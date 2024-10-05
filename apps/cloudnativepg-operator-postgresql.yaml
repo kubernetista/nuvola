@@ -1,28 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cloudnativepg-postgresql
-  namespace: database
+  name: cloudnativepg-operator-postgresql
+  namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
   - repoURL: https://cloudnative-pg.github.io/charts
-    chart: jenkins
+    chart: cloudnative-pg
     # helm search repo cnpg/cloudnative-pg --versions | head
     targetRevision: 0.22.0
     helm:
-      releaseName: cloudnative-pg
-      valueFiles:
-      - $values/cloudnativepg-postgresql/values.yaml
+      releaseName: cloudnative-pg-operator
+      # valueFiles:
+      # - $values/cloudnativepg-postgresql/values.yaml
       # - values.yaml
   - repoURL: https://github.com/kubernetista/nuvola.git
     targetRevision: main
     ref: values
   destination:
     name: "in-cluster"
-    namespace: database
+    namespace: cnpg-system
   syncPolicy:
     automated:
       prune: true
