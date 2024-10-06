@@ -1,0 +1,14 @@
+# Customized Act Runner with root user for Docker-in-Docker
+
+services:
+  runner-root-2:
+    image: runner-root:v2
+    # image: ghcr.io/kubernetista/runner-root:v2
+    build:
+      context: .
+      dockerfile: ./_assets/runner-root.dockerfile
+
+    container_name: runner-root-2
+    command: sleep infinity
+    privileged: true
+    restart: unless-stopped
