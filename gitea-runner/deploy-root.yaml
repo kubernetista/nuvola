@@ -1,26 +1,25 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: act-runner-dind
-  name: act-runner-dind
+    app: act-runner-root
+  name: act-runner-root
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: act-runner-dind
+      app: act-runner-root
   strategy: {}
   template:
     metadata:
       labels:
-        app: act-runner-dind
+        app: act-runner-root
     spec:
       restartPolicy: Always
       volumes:
       - name: runner-data
         persistentVolumeClaim:
-          claimName: act-runner-dind-vol
+          claimName: act-runner-root-vol
       - name: docker-certs
         emptyDir: {}
       containers:
@@ -30,17 +29,17 @@ spec:
         # command: ["sh", "-c", "while ! nc -z localhost 2376 </dev/null; do echo 'waiting for docker daemon...'; sleep 5; done; /sbin/tini -- /opt/act/run.sh"]
         env:
         - name: DOCKER_HOST
-          value: unix:///run/user/1000/docker.sock
+          value: unix:///var/run/docker.sock
+          # value: unix:///run/user/1000/docker.sock
           # value: tcp://localhost:2376
-          # value: unix:///var/run/docker.sock
-        # - name: DOCKER_CERT_PATH
-        #   value: /certs/client
-        # - name: DOCKER_TLS_VERIFY
-        #   value: "1"
+        - name: DOCKER_CERT_PATH
+          value: /certs/client
+        - name: DOCKER_TLS_VERIFY
+          value: "1"
         - name: GITEA_INSTANCE_URL
           value: http://gitea-http.git.svc.cluster.local:3000
         - name: GITEA_RUNNER_REGISTRATION_TOKEN
-          value: "${RUNNER_TOKEN}"
+          value: "OIYjLuCSUMQUdSAhV8RMOuNzzn47xwDuIgpFOvSA"
           # valueFrom:
           #   secretKeyRef:
           #     name: runner-secret

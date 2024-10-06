@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: act-runner-vol
+  name: act-runner-rootless-vol
 spec:
   accessModes:
     - ReadWriteOnce
@@ -10,15 +10,15 @@ spec:
     requests:
       storage: 1Gi
   # storageClassName: standard
-# ---
-# kind: PersistentVolumeClaim
-# apiVersion: v1
-# metadata:
-#   name: act-runner-dind-vol
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   resources:
-#     requests:
-#       storage: 1Gi
-#   # storageClassName: standard
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: act-runner-root-vol
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  # storageClassName: standard
