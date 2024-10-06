@@ -1,14 +1,26 @@
 # Customized Act Runner with root user for Docker-in-Docker
-
+name: runner-root
 services:
-  runner-root-2:
+  runner-root:
+    container_name: runner-root-v3
+
     image: runner-root:v2
     # image: ghcr.io/kubernetista/runner-root:v2
+
     build:
       context: .
       dockerfile: ./_assets/runner-root.dockerfile
 
-    container_name: runner-root-2
-    command: sleep infinity
+    environment:
+      - REGISTRY_GITEA_HTTPS=git.localhost:8443
+      - REGISTRY_USERNAME=aruba-demo
+      - REGISTRY_PASSWORD=NeOzersChqN9fydl
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./full-ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+
     privileged: true
+    command: sleep infinity
+    network_mode: host
     restart: unless-stopped
