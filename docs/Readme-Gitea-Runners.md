@@ -54,3 +54,12 @@ To make it work, follow the instructions:
 #
 kubectl get configmap kube-root-ca.crt -n traefik -o jsonpath='{.data.ca\.crt}' > ca.crt
 ```
+
+### Run the act-runner as a docker container with compose
+
+```sh
+cd _assets/
+docker compose up
+# docker compose up -d
+
+```
