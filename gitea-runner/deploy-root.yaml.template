@@ -29,9 +29,9 @@ spec:
         # command: ["sh", "-c", "while ! nc -z localhost 2376 </dev/null; do echo 'waiting for docker daemon...'; sleep 5; done; /sbin/tini -- /opt/act/run.sh"]
         env:
         - name: DOCKER_HOST
-          value: unix:///var/run/docker.sock
+          value: tcp://localhost:2376
+          # value: unix:///var/run/docker.sock
           # value: unix:///run/user/1000/docker.sock
-          # value: tcp://localhost:2376
         - name: DOCKER_CERT_PATH
           value: /certs/client
         - name: DOCKER_TLS_VERIFY
