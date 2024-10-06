@@ -2,7 +2,7 @@
 name: runner-root
 services:
   runner-root:
-    container_name: runner-root-v3
+    container_name: runner-root-v2
 
     image: runner-root:v2
     # image: ghcr.io/kubernetista/runner-root:v2
