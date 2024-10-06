@@ -38,7 +38,7 @@ docker tag traefik/whoami registry.localhost:5000/traefik-whoami
 docker push registry.localhost:5000/traefik-whoami
 ```
 
-## Push this git repo to Gitea
+## Push this git repo to local Gitea
 
 ```sh
 # add Gitea remote (execute from the git repo base directory)
