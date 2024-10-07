@@ -20,16 +20,20 @@
 <https://github.com/catthehacker/docker_images/tree/master>
 <https://github.com/catthehacker/docker_images/pkgs/container/ubuntu/versions?filters%5Bversion_type%5D=tagged>
 
-## Run the act-runner locally
+## Run the act-runner (external container/runner) directly
 
 ```sh
+# the Act runner config files are in _assets/
+cd ./_assets/
+
 # generate a config file
 act_runner generate-config > ./gitea-runner/config/runner-config.yaml
 
 # edit the file
+# ...
 
 # start act_runner with the new config file
-sudo act_runner daemon --config ./gitea-runner/config/runner-config.yaml
+sudo act_runner daemon --config ./runner-config.yaml
 ```
 
 ### Get the certificates from Traefik
@@ -55,7 +59,7 @@ To make it work, follow the instructions:
 kubectl get configmap kube-root-ca.crt -n traefik -o jsonpath='{.data.ca\.crt}' > ca.crt
 ```
 
-### Run the act-runner as a docker container with compose
+### Run the runner-root (internal container) with docker compose
 
 ```sh
 cd _assets/
