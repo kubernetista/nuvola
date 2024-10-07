@@ -6,9 +6,6 @@
   "token": "1c61e465b4663496cdf8c1cfd306b9fb6204eb85",
   "address": "http://git.localhost:8000/",
   "labels": [
-    "macos:host",
-    "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest",
-    "ubuntu-22.04:docker://gitea/runner-images:ubuntu-22.04",
-    "ubuntu-20.04:docker://gitea/runner-images:ubuntu-20.04"
+    "macos:host"
   ]
 }
