@@ -30,8 +30,8 @@ spec:
         env:
         - name: DOCKER_HOST
           value: tcp://localhost:2376
+          # value: unix:///var/run/docker.sock
           # value: unix:///run/user/1000/docker.sock
-          # value: tcp://localhost:2376
         - name: DOCKER_CERT_PATH
           value: /certs/client
         - name: DOCKER_TLS_VERIFY
@@ -39,7 +39,7 @@ spec:
         - name: GITEA_INSTANCE_URL
           value: http://gitea-http.git.svc.cluster.local:3000
         - name: GITEA_RUNNER_REGISTRATION_TOKEN
-          value: "OIYjLuCSUMQUdSAhV8RMOuNzzn47xwDuIgpFOvSA"
+          value: "FX5UApUIkhLADgRnB04ti7cYNftICkW6HXM0bZz1"
           # valueFrom:
           #   secretKeyRef:
           #     name: runner-secret
