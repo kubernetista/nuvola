@@ -42,7 +42,8 @@ service:
   http:
     # type: ClusterIP
     type: LoadBalancer
-    port: 3000
+    # port: 3000
+    port: 2222
     clusterIP: None
     loadBalancerIP:
     nodePort:
