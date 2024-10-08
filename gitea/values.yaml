@@ -265,7 +265,8 @@ gitea:
     server:
       SSH_PORT: 22 # rootful image
       SSH_LISTEN_PORT: 2222 # rootless image
-      ROOT_URL: http://git.localhost:8000
+      # ROOT_URL: http://git.localhost:8000
+      ROOT_URL: https://git.localhost/
   #
   #  security:
   #    PASSWORD_COMPLEXITY: spec
