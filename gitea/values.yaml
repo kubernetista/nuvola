@@ -40,7 +40,8 @@ service:
   ## @param service.http.labels HTTP service additional labels
   ## @param service.http.loadBalancerClass Loadbalancer class
   http:
-    type: ClusterIP
+    # type: ClusterIP
+    type: LoadBalancer
     port: 3000
     clusterIP: None
     loadBalancerIP:
