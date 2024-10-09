@@ -31,6 +31,8 @@ kubectl apply -f argocd/argocd.yaml -f apps/traefik.yaml
 kubectl apply -f apps/apps.yaml
 ```
 
+## 🛑 Continue the setup in Readme1-ArgoCD, inside project ArgoCD-Setup
+
 ## Push image used by the whoami app to the k3d-registry
 
 ```sh
