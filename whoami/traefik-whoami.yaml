@@ -27,7 +27,8 @@ spec:
    spec:
      containers:
        - name: traefik-whoami
-         image: registry.localhost:5000/traefik-whoami
+        #  image: registry.localhost:5000/traefik-whoami
+         image: traefik/whoami
          ports:
            - name: web
              containerPort: 80
