@@ -6,3 +6,6 @@
 
 # k3d cluster config
 k3d/cluster/
+
+# Ignore new files in bootstrap (as they come from the k3s cluster via the volume mount)
+/k3d/bootstrap
