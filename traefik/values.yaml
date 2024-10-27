@@ -1,13 +1,9 @@
 image: {}
-  #tag: v3.1.5
+  #tag: v3.1.6
 
 deployment:
   enabled: true
   replicas: 1
-
-globalArguments:
-- "--global.checknewversion"
-- "--global.sendanonymoususage=false"
 
 service:
   enabled: true
@@ -77,12 +73,119 @@ providers:
       # By default this Traefik service
       # pathOverride: ""
 
+  file:
+    # -- Create a file provider
+    enabled: true
+    # -- Allows Traefik to automatically watch for file changes
+    watch: true
+    # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
+    content: ""
+### START OF TRAEFIK CONFIGURATION FILE CONTENT ###
+    # content:
+    #   tls:
+    #     certificates:
+    #       # - certFile: "/etc/certs/_wildcard.localhost.pem"
+    #       #   keyFile: "/etc/certs/_wildcard.localhost-key.pem"
+
+    #       # - certFile: "/etc/certs/_wildcard.localtest.me-key.pem"
+    #       #   keyFile: "/etc/certs/_wildcard.localtest.me.pem"
+
+    #       - certFile: "/etc/certs/traefik.localhost.pem"
+    #         keyFile: "/etc/certs/traefik.localhost-key.pem"
+    #       - certFile: "/etc/certs/git.localhost.pem"
+    #         keyFile: "/etc/certs/git.localhost-key.pem"
+    #       - certFile: "/etc/certs/argocd.localhost.pem"
+    #         keyFile: "/etc/certs/argocd.localhost-key.pem"
+    #       - certFile: "/etc/certs/registry.localhost.pem"
+    #         keyFile: "/etc/certs/registry.localhost-key.pem"
+    #       - certFile: "/etc/certs/jenkins.localhost.pem"
+    #         keyFile: "/etc/certs/jenkins.localhost-key.pem"
+    #       - certFile: "/etc/certs/argoworkflows.localhost.pem"
+    #         keyFile: "/etc/certs/argoworkflows.localhost-key.pem"
+    #       - certFile: "/etc/certs/whoami.localhost.pem"
+    #         keyFile: "/etc/certs/whoami.localhost-key.pem"
+
+    #   http:
+    #     routers:
+    #       router0:
+    #         rule: "Host(`git.localhost`) || Host(`argocd.localhost`) || Host(`registry.localhost`) || Host(`jenkins.localhost`) || Host(`argoworkflows.localhost`) || Host(`whoami.localhost`)"
+    #         service: giteaService
+    #         tls: true
+    #         entrypoints:
+    #           - websecure
+    #     services:
+    #       giteaService:
+    #         loadBalancer:
+    #           servers:
+    #             # - url: "http://localhost:3000"
+    #             - url: "http://localhost:8000"
+    #           # passHostHeader: true
+    #           # responseForwarding:
+    #           #   flushInterval: 100ms
+
+    #   # http:
+    #   #   routers:
+    #   #     router0:
+    #   #       entryPoints:
+    #   #       - web
+    #   #       middlewares:
+    #   #       - my-basic-auth
+    #   #       service: service-foo
+    #   #       rule: Path(`/foo`)
+
+### END OF TRAEFIK CONFIGURATION FILE CONTENT ###
+
+
+#
+# -- Add volumes to the traefik pod. The volume name will be passed to tpl.
+# This can be used to mount a cert pair or a configmap that holds a config.toml file.
+# After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
+# `additionalArguments:
+# - "--providers.file.filename=/config/dynamic.toml"
+# - "--ping"
+# - "--ping.entrypoint=web"`
+volumes: []
+# - name: public-cert
+#   mountPath: "/certs"
+#   type: secret
+# - name: '{{ printf "%s-configs" .Release.Name }}'
+#   mountPath: "/config"
+#   type: configMap
+
+# -- Additional volumeMounts to add to the Traefik container
+additionalVolumeMounts: []
+# -- For instance when using a logshipper for access logs
+# - name: traefik-logs
+#   mountPath: /var/log/traefik
 
 logs:
   general:
+    # -- By default, the logs use a text format (common), but you can
+    # also ask for the json format in the format option
+    # format: json
+    # By default, the level is set to ERROR.
+    # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
     # level: INFO
     level: DEBUG
+    # -- To enable access logs
   access:
     enabled: true
+    ## By default, logs are written using the Common Log Format (CLF) on stdout.
+    ## To write logs in JSON, use json in the format option.
+    ## If the given format is unsupported, the default (CLF) is used instead.
+    # format: json
+    # filePath: "/var/log/traefik/access.log
 
-additionalArguments:
+# -- Global command arguments to be passed to all traefik's pods
+globalArguments:
+- "--global.checknewversion=false"
+# - "--global.sendanonymoususage=false"
+
+#
+# Configure Traefik static configuration
+# -- Additional arguments to be passed at Traefik's binary
+# All available options available on https://docs.traefik.io/reference/static-configuration/cli/
+## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
+additionalArguments: []
+#  - "--providers.kubernetesingress.ingressclass=traefik-internal"
+#  - "--log.level=DEBUG"

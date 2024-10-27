@@ -5,7 +5,7 @@ metadata:
 servers: 1
 # agents: 2
 # To check latest version: k3d version list k3s -l 5
-image: rancher/k3s:v1.30.5-k3s1
+image: rancher/${K3S_VERSION}
 # image: rancher/k3s:v1.30.5-k3s1-amd64
 # kubeAPI: # same as `--api-port myhost.my.domain:6445` (where the name would resolve to 127.0.0.1)
   # host: "myhost.my.domain" # important for the `server` setting in the kubeconfig
