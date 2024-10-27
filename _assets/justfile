@@ -1,0 +1,20 @@
+# Justfile
+
+# Variables
+# IMAGE_NAME := "fastapi-uv:latest"
+
+# List 📜 all recipes (default)
+help:
+    @just --list
+
+# Start 🚀 Gitea Runner in Docker 🐳
+start-runner:
+    sudo act_runner daemon --config ./runner-config.yaml
+
+# Start 🚀 Gitea Runner in Docker 🐳
+start-runner-in-docker:
+    docker compose -f compose.yaml up
+
+# Start 🚀 Gitea Runner in Docker 🐳, detaching 🫥
+start-runner-in-docker-background:
+    docker compose -f compose.yaml up --detach
