@@ -63,6 +63,7 @@ argocd login --insecure --grpc-web --username admin argocd.localhost:8443
 ```sh
 # Add ArgoCD and Traefik apps
 kubectl apply -f argocd/argocd.yaml -f apps/traefik.yaml
+
 # Add all the other apps/
 kubectl apply -f apps/apps.yaml
 ```
