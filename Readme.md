@@ -67,3 +67,28 @@ kubectl apply -f argocd/argocd.yaml -f apps/traefik.yaml
 # Add all the other apps/
 kubectl apply -f apps/apps.yaml
 ```
+
+## TEMP ⏳ : start Traefik with docker compose
+
+```sh
+# Switch to project
+cd ../traefik-mkcert-docker/
+
+# Just ⚖️ : start traefik
+just restart-traefik
+```
+
+## Browse
+
+Open:
+
+- [Gittea](https://git.localhost/)
+- [ArgoCD](https://argocd.localhost/)
+- [Traefik Dashboard (Internal)](https://traefik.localhost/)
+- [Traefik Dashboard (External)](http://localhost:9000/dashboard/#/)
+- [Whoami demo app](https://whoami.localhost/)
+- [Anything else](https://any.localhost/)
+
+```sh
+#
+```
