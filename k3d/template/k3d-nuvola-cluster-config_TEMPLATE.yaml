@@ -7,6 +7,12 @@ servers: 1
 # To check latest version: k3d version list k3s -l 5
 image: rancher/${K3S_VERSION}
 # image: rancher/k3s:v1.30.5-k3s1-amd64
+volumes: # repeatable flags are represented as YAML lists
+  # same as `--volume '/my/host/path:/path/in/node@server:0;agent:*'`
+  - volume: ${PWD}/k3d/bootstrap/:/var/lib/rancher/k3s/server/manifests
+    nodeFilters:
+      - server:0
+      # - agent:*
 # kubeAPI: # same as `--api-port myhost.my.domain:6445` (where the name would resolve to 127.0.0.1)
   # host: "myhost.my.domain" # important for the `server` setting in the kubeconfig
   # hostIP: "127.0.0.1" # where the Kubernetes API will be listening on
