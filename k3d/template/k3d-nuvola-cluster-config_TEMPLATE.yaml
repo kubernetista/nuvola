@@ -1,0 +1,97 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: ${K3D_CLUSTER}
+servers: 1
+# agents: 2
+# To check latest version: k3d version list k3s -l 5
+image: rancher/k3s:v1.30.5-k3s1
+# image: rancher/k3s:v1.30.5-k3s1-amd64
+# kubeAPI: # same as `--api-port myhost.my.domain:6445` (where the name would resolve to 127.0.0.1)
+  # host: "myhost.my.domain" # important for the `server` setting in the kubeconfig
+  # hostIP: "127.0.0.1" # where the Kubernetes API will be listening on
+  # hostPort: "6445" # where the Kubernetes API listening port will be mapped to on your host system
+ports:
+  # Traefik web
+  - port: 8000:80
+    nodeFilters:
+      - loadbalancer
+  # Traefik websecure
+  - port: 8443:443
+    nodeFilters:
+      - loadbalancer
+  # Traefik dashboard
+  - port: 9000:9000
+    nodeFilters:
+      - loadbalancer
+  # git ssh
+  - port: 2222:2222
+    nodeFilters:
+      - loadbalancer
+  # gitea LB
+  - port: 3000:3000
+    nodeFilters:
+      - loadbalancer
+env:
+  - envVar: FOO=bar
+    nodeFilters:
+      - server:0
+registries:
+  create:
+    name: registry.localhost
+    host: "0.0.0.0"
+    hostPort: "5000"
+  # config: |
+  #   mirrors:
+  #     "localhost:5000":
+  #       endpoint:
+  #         - http://registry.localhost:5000
+
+hostAliases:
+  - ip: 127.0.0.1
+    hostnames:
+      - jenkins.local
+  - ip: 1.2.3.4
+    hostnames:
+      - my.host.local
+      - that.other.local
+  - ip: 1.1.1.1
+    hostnames:
+      - cloud.flare.dns
+
+options:
+  k3d: # k3d runtime settings
+    wait: true # wait for cluster to be usable before returning; same as `--wait` (default: true)
+    timeout: "60s" # wait timeout before aborting; same as `--timeout 60s`
+    # disableLoadbalancer: false # same as `--no-lb`
+    # disableImageVolume: false # same as `--no-image-volume`
+    # disableRollback: false # same as `--no-Rollback`
+    # loadbalancer:
+    #   configOverrides:
+    #     - settings.workerConnections=2048
+  k3s: # options passed on to K3s itself
+    extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
+      # - arg: "--no-deploy=traefik@server:*"  # same as `--no-deploy=traefik@server:*`
+      - arg: "--disable=traefik"
+        nodeFilters:
+          - server:*
+      # - arg: "--tls-san=my.host.domain"
+      #   nodeFilters:
+      #     - server:*
+    # nodeLabels:
+    #   - label: foo=bar # same as `--k3s-node-label 'foo=bar@agent:1'` -> this results in a Kubernetes node label
+    #     nodeFilters:
+    #       - agent:1
+  kubeconfig:
+    updateDefaultKubeconfig: true # add new cluster to your default Kubeconfig; same as `--kubeconfig-update-default` (default: true)
+    switchCurrentContext: true # also set current-context to the new cluster's context; same as `--kubeconfig-switch-context` (default: true)
+  # runtime: # runtime (docker) specific options
+  #   gpuRequest: all # same as `--gpus all`
+  #   labels:
+  #     - label: bar=baz # same as `--runtime-label 'bar=baz@agent:1'` -> this results in a runtime (docker) container label
+  #       nodeFilters:
+  #         - agent:1
+  #   ulimits:
+  #     - name: nofile
+  #       soft: 26677
+  #       hard: 26677
