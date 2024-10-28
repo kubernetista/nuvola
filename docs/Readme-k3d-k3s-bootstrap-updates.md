@@ -1,4 +1,4 @@
-# k3d bootstrap
+# Bootstrap k3d / k3s
 
 ## Keep the k3d bootstrap manifests updated
 
