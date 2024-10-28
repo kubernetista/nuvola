@@ -7,6 +7,7 @@
 - <https://k3d.io/v5.7.4/usage/configfile/>
 - <https://docs.k3s.io/installation/packaged-components>
 - <https://docs.k3s.io/helm>
+- <https://github.com/k3s-io/helm-controller/>
 - <https://docs.k3s.io/advanced>
 - <https://docs.k3s.io/installation/configuration#configuration-file>
 
@@ -23,17 +24,4 @@ helm template traefik traefik/traefik -n traefik --create-namespace -f ./traefik
 
 # App of apps
 cp ./apps/apps.yaml ./k3d/bootstrap/
-```
-
-## Certificates
-
-<!-- markdownlint-disable MD024 -->
-### Reference
-<!-- markdownlint-enable MD024 -->
-
-- <https://docs.k3s.io/cli/certificate>
-- <https://github.com/k3s-io/k3s/blob/master/contrib/util/generate-custom-ca-certs.sh>
-
-```sh
-#
 ```
