@@ -4,7 +4,7 @@
 
 ### Reference
 
-- <https://docs.k3s.io/installation/private-registry>
+- <https://docs.k3s.io/installation/private-registry> ⭐️⭐️⭐️
 - <https://docs.k3s.io/installation/registry-mirror>
 - <https://docs.k3s.io/advanced#using-docker-as-the-container-runtime>
 

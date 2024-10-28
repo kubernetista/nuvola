@@ -11,6 +11,10 @@
 - <https://docs.k3s.io/advanced>
 - <https://docs.k3s.io/installation/configuration#configuration-file>
 
+Other options to deploy k3s, including in cloud like AWS and GCP:
+
+- <https://docs.k3s.io/related-projects>
+
 HelmCharts and HelmChartsConfig are *__k3s native__* alternatives to the rendered helm manifests used below.
 
 ### CLI
