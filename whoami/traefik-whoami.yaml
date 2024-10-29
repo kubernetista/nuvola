@@ -42,6 +42,10 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   ingressClassName: traefik
+  tls:
+    - hosts:
+        - whoami.localhost
+      secretName: git-localhost-tls
   rules:
     - host: "whoami.localhost"
       http:
