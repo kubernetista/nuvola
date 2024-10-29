@@ -1,4 +1,4 @@
-# Nuvola 3: Setup & Problems
+# Nuvola 3/4: Setup & Problems
 
 # Setup
 
@@ -11,6 +11,20 @@ echo ${K3D_CLUSTER}
 just k3d-cluster-create
 kubectl apply -f secrets/
 argocd admin initial-password -n argocd | head -n 1
+
+# Test
+cd fastapi-uv
+git push local
+dagger call test-publish-local --registry git.localhost
+
+cd nuvola
+git push local
+
+cd fastapi-demo
+git push local
+
+docker push git.localhost/aruba-demo/alpine:latest
+
 ```
 
 # Check http/https access
