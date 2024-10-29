@@ -1,0 +1,18 @@
+server:
+  enabled: true
+
+  ha:
+    # enabled: true
+    enabled: false
+
+  dataStorage:
+    enabled: true
+    storageClass: "standard"
+    accessMode: ReadWriteOnce
+    size: 2Gi
+
+  service:
+    type: LoadBalancer
+
+  dev:
+    enabled: true
