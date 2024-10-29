@@ -43,10 +43,13 @@ spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - whoami.localhost
-      secretName: wildcard-localhost-tls
+        # - whoami.localhost
+        - whoami.localtest.me
+      # secretName: wildcard-localhost-tls
+      secretName: wildcard-localtest-me-tls
   rules:
-    - host: "whoami.localhost"
+    # - host: "whoami.localhost"
+    - host: "whoami.localtest.me"
       http:
         paths:
           - path: /
