@@ -19,11 +19,11 @@ volumes: # repeatable flags are represented as YAML lists
   # hostPort: "6445" # where the Kubernetes API listening port will be mapped to on your host system
 ports:
   # Traefik web
-  - port: 8000:80
+  - port: 80:80
     nodeFilters:
       - loadbalancer
   # Traefik websecure
-  - port: 8443:443
+  - port: 443:443
     nodeFilters:
       - loadbalancer
   # Traefik dashboard
@@ -38,20 +38,24 @@ ports:
   - port: 3000:3000
     nodeFilters:
       - loadbalancer
+  # Vault LB
+  - port: 8200:8200
+    nodeFilters:
+      - loadbalancer
 env:
   - envVar: FOO=bar
     nodeFilters:
       - server:0
 registries:
   create:
-    name: registry.localhost
+    name: registry-${K3D_CLUSTER_ID}.localhost
     host: "0.0.0.0"
-    hostPort: "5000"
-  # config: |
-  #   mirrors:
-  #     "localhost:5000":
-  #       endpoint:
-  #         - http://registry.localhost:5000
+    hostPort: "501${K3D_CLUSTER_ID}"
+  config: |
+    mirrors:
+      "localhost:501${K3D_CLUSTER_ID}":
+        endpoint:
+          - http://registry.localhost:501${K3D_CLUSTER_ID}
 
 hostAliases:
   - ip: 127.0.0.1
