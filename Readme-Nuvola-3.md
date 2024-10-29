@@ -2,11 +2,15 @@
 
 # Setup
 
+Do I still need port 2222 (✅) and 3000 (❌) ❓❓
+
 ```sh
 # Create (with the config already created and updated)
-cd nuvola/k3d/cluster
+cd nuvola/
 echo ${K3D_CLUSTER}
 just k3d-cluster-create
+kubectl apply -f secrets/
+argocd admin initial-password -n argocd | head -n 1
 ```
 
 # Check http/https access
