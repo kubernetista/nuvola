@@ -45,7 +45,7 @@ spec:
   tls:
     - hosts:
         - whoami.localhost
-      secretName: git-localhost-tls
+      secretName: wildcard-localhost-tls
   rules:
     - host: "whoami.localhost"
       http:
