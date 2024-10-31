@@ -12,7 +12,8 @@ server:
     size: 2Gi
 
   service:
-    type: LoadBalancer
+    # type: LoadBalancer
+    type: ClusterIP
 
   dev:
     enabled: true
