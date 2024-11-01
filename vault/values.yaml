@@ -1,6 +1,12 @@
 server:
   enabled: true
 
+  image:
+    repository: "hashicorp/vault"
+    tag: "1.18.1"
+    # Overrides the default Image Pull Policy
+    pullPolicy: IfNotPresent
+
   ha:
     # enabled: true
     enabled: false
