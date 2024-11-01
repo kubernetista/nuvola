@@ -3,11 +3,13 @@ kind: Application
 metadata:
   name: debug-shell
   namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
   project: default
+  destination:
+    name: "in-cluster"
+    namespace: default
   source:
     helm:
       valueFiles:
