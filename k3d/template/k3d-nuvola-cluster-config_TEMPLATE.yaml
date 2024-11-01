@@ -57,17 +57,22 @@ registries:
         endpoint:
           - http://registry.localhost:501${K3D_CLUSTER_ID}
 
+# - gitea-http.git.svc.cluster.local
+# - argocd-server.argocd.svc.cluster.local
 hostAliases:
   - ip: 127.0.0.1
     hostnames:
+      - argocd.localhost
+      - git.localhost
+      - traefik.localhost
       - jenkins.local
-  - ip: 1.2.3.4
-    hostnames:
-      - my.host.local
-      - that.other.local
-  - ip: 1.1.1.1
-    hostnames:
-      - cloud.flare.dns
+  # - ip: 1.2.3.4
+  #   hostnames:
+  #     - my.host.local
+  #     - that.other.local
+  # - ip: 1.1.1.1
+  #   hostnames:
+  #     - cloud.flare.dns
 
 options:
   k3d: # k3d runtime settings
