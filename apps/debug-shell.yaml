@@ -2,20 +2,17 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: debug-shell
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  destination:
-    name: "in-cluster"
-    namespace: default
   source:
-    helm:
-      valueFiles:
-      - ../values.yaml
-    path: debug-shell
     repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/debug-shell.git
+    targetRevision: HEAD
+    path: kustomize
+    kustomize:
+      namePrefix: debug-shell-
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
   syncPolicy:
     automated:
       prune: true
