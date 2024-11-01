@@ -3,7 +3,7 @@ server:
 
   image:
     repository: "hashicorp/vault"
-    tag: "1.18.1"
+    # tag: "1.17.2"
     # Overrides the default Image Pull Policy
     pullPolicy: IfNotPresent
 
@@ -87,7 +87,7 @@ csi:
 
   image:
     repository: "hashicorp/vault-csi-provider"
-    tag: "1.4.6"
+    tag: "1.4.2"
     pullPolicy: IfNotPresent
 
   agent:
@@ -96,5 +96,5 @@ csi:
 
     image:
       repository: "hashicorp/vault"
-      tag: "1.18.1"
+      # tag: "1.17.2"
       pullPolicy: IfNotPresent
