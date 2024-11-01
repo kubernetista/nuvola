@@ -44,14 +44,15 @@ controller:
     # -- Additional ingress labels
     labels: {}
     # -- Defines which ingress controller will implement the resource
-    ingressClassName: ""
-    # ingressClassName: "traefik"
+    # ingressClassName: ""
+    ingressClassName: "traefik"
 
     # -- List of ingress hosts
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
     hosts:
       - argoworkflows.localhost
+      - argoworkflows.localtest.me
 
     # -- List of ingress paths
     paths:
