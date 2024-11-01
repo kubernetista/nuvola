@@ -46,9 +46,9 @@ server:
 
     # -- The list of additional hostnames to be covered by ingress record
     # @default -- `[]` (See [values.yaml])
-    extraHosts: []
-      # - name: argocd.example.com
-      #   path: /
+    extraHosts:
+      - name: argocd.localtest.me
+        path: /
 
     # -- Additional ingress paths
     # @default -- `[]` (See [values.yaml])
