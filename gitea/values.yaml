@@ -103,6 +103,10 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
+    - host: git.localtest.me
+      paths:
+        - path: /
+          pathType: Prefix
     - host: git.localhost
       paths:
         - path: /
@@ -236,7 +240,7 @@ gitea:
   ## @param gitea.admin.passwordMode Mode for how to set/update the admin user password. Options are: initialOnlyNoReset, initialOnlyRequireReset, and keepUpdated
   admin:
     existingSecret: gitea-admin-secret
-    email: "aruba-demo@git.localhost"
+    email: "aruba-demo@git.localtest.me"
     passwordMode: keepUpdated
     # existingSecret:
     #   username: gitea_admin
@@ -267,7 +271,7 @@ gitea:
       SSH_PORT: 22 # rootful image
       SSH_LISTEN_PORT: 2222 # rootless image
       # ROOT_URL: http://git.localhost:8000
-      ROOT_URL: https://git.localhost/
+      ROOT_URL: https://git.localtest.me
   #
   #  security:
   #    PASSWORD_COMPLEXITY: spec
