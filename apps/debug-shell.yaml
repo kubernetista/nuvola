@@ -6,7 +6,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/debug-shell.git
+    # repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/debug-shell.git
+    repoURL: http://github.com/kubernetista/debug-shell.git
     targetRevision: HEAD
     path: kustomize
     # kustomize:
