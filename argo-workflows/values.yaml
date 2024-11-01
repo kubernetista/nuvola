@@ -34,6 +34,7 @@ controller:
   workflowNamespaces:
     - default
 
+server:
   ## Ingress configuration.
   # ref: https://kubernetes.io/docs/user-guide/ingress/
   ingress:
