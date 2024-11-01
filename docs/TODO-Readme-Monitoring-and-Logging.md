@@ -12,7 +12,22 @@
 
 ### CLI
 
-Example Kafka setup
+#### Add Rancher Logging Operator
+
+```sh
+# Add Helm repo and update
+helm repo add rancher-charts https://charts.rancher.io
+helm repo update
+
+# Install CRDs
+helm upgrade --install --create-namespace -n cattle-logging-system rancher-logging-crd rancher-charts/rancher-logging-crd
+
+# Install Logging Operator
+helm upgrade --install --create-namespace -n cattle-logging-system rancher-logging --set additionalLoggingSources.k3s.enabled=true rancher-charts/rancher-logging
+
+```
+
+#### Example Kafka setup
 
 ```sh
 # Install Logging Generator
