@@ -1,4 +1,4 @@
-# Nuvola 3/4: Setup & Problems
+# Nuvola 3/4: Quick setup & problems
 
 # Setup
 
@@ -12,10 +12,13 @@ just k3d-cluster-create
 kubectl apply -f secrets/
 argocd admin initial-password -n argocd | head -n 1
 
+# GITEA_HOST="git.localhost"
+GITEA_HOST="git.localtest.me"
+
 # Test
 cd fastapi-uv
 git push local
-dagger call test-publish-local --registry git.localhost
+dagger call test-publish-local --registry ${GITEA_HOST}
 
 cd nuvola
 git push local
@@ -23,7 +26,7 @@ git push local
 cd fastapi-demo
 git push local
 
-docker push git.localhost/aruba-demo/alpine:latest
+docker push ${GITEA_HOST}/aruba-demo/alpine:latest
 
 ```
 
@@ -31,14 +34,14 @@ docker push git.localhost/aruba-demo/alpine:latest
 
 ```sh
 #
-http --verify no https://git.localhost
+http --verify no https://${GITEA_HOST}
 ```
 
 ## Verify Certificate
 
 ```sh
-#
-openssl s_client -showcerts -connect git.localhost:443 </dev/null | bat -l yaml
+# check ${GITEA_HOST} certificate
+openssl s_client -showcerts -connect ${GITEA_HOST}:443 </dev/null | bat -l yaml
 ```
 
 ## Git Push
@@ -55,7 +58,7 @@ git remote -v
 git remote remove local
 
 # Set "local" remote
-git remote add local https://git.localhost/aruba-demo/$(basename "${PWD}").git
+git remote add local https://${GITEA_HOST}/aruba-demo/$(basename "${PWD}").git
 
 # Set upstream and push
 git -c http.sslVerify=false push -u local main
@@ -104,12 +107,19 @@ Reference:
 - <https://chatgpt.com/share/672100f4-3d68-8006-8965-ba2211fbfeb0>
 
 ```sh
-# The certs are in the project `traefik-mkcert-docker`
+# Generate the certs with expiration in 20gg using kixelated/mkcert
+cd kixelated-mkcert/
+./mkcert -days=20 '*.localtest.me'
+
+# Check the certs
+openssl x509 -in _wildcard.localtest.me.pem -noout -text | bat -l yaml
+
+# The other certs are in the project `traefik-mkcert-docker`
 cd traefik-mkcert-docker/certs
 
-# Generate kubernetes secret
+# Generate kubernetes secret with the cert ${GITEA_HOST}.pem
 kubectl create -n git secret tls git-localhost-tls \
-    --cert=git.localhost.pem --key=git.localhost-key.pem \
+    --cert=${GITEA_HOST}.pem --key=${GITEA_HOST}-key.pem \
     --dry-run=client -o yaml | kubectl neat > secret-tls-git-localhost.yaml
 
 # Create

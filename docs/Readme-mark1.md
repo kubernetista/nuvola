@@ -1,4 +1,4 @@
-# Set up Nuvola environment
+# Manual set up of the Nuvola environment (Mark 1)
 
 ## Create k3d cluster
 
