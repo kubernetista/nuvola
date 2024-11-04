@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubetail
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+  - repoURL: https://kubetail-org.github.io/helm-charts/
+    chart: kubetail
+    # helm search repo kubetail/kubetail --versions | head
+    targetRevision: 0.8.4
+    helm:
+      releaseName: kubetail
+      valueFiles:
+      - $values/kubetail/values.yaml
+      # - values.yaml
+  - repoURL: https://github.com/kubernetista/nuvola.git
+    targetRevision: main
+    ref: values
+  destination:
+    name: "in-cluster"
+    namespace: argo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

@@ -1,0 +1,33 @@
+kubetail:
+  # -- Auth mode lets you specify Kubetail's authentication mode (cluster, token)
+  authMode: "cluster"
+
+  # -- Kubetail server component settings
+  server:
+    # -- Ingress resource settings
+    ingress:
+      # -- Enable resource
+      enabled: true
+      # # -- Overrides the ClusterRole resource name whose default is based on the chart's computed fullname
+      # name: null
+      # # -- Additional annotations
+      # annotations: {}
+      # # -- Additional labels
+      # labels: {}
+      # -- Rules
+      # rules: []
+      rules:
+        - host: logs.localtest.me
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: kubetail-server
+                    port:
+                      number: 80
+      # # -- TLS
+      # tls: []
+      # # -- Class name
+      # className: null
