@@ -1,17 +1,76 @@
-# Nuvola 3/4: Quick setup & problems
+# Nuvola Quick setup (& problems) - Mark 3
 
-# Setup
+## Setup
 
 Do I still need port 2222 (✅) and 3000 (❌) ❓❓
 
 ```sh
 # Create (with the config already created and updated)
-cd nuvola/
+cd nuvola
+
+#
 echo ${K3D_CLUSTER}
+
+#
+just k3d-cluster-generate-config
+
+#
 just k3d-cluster-create
+
+#
 kubectl apply -f secrets/
+
+#
+argocd admin initial-password -n argocd | head -n 1
+```
+
+## Generate a certificate with mkcert, and add it to the Gitea Ingress
+
+```sh
+# Generate the certs with expiration in 20gg using kixelated/mkcert
+cd kixelated-mkcert/
+
+# Generate
+./mkcert -days=20 '*.localtest.me'
+
+# Check
+openssl x509 -in _wildcard.localtest.me.pem -noout -text | bat -l yaml
+
+# Copy the files to the nuvola repo, in a directory excluded from git
+cp _wildcard.localtest.me* ../_nuvola/nuvola/_assets/secrets/
+
+# Eventually the other certs are in the project `traefik-mkcert-docker`
+cd traefik-mkcert-docker/certs
+
+# Switch to the directory containing the certs
+cd nuvola/_assets/secrets
+
+# Rename
+CERT_NAME="wildcard-localtest-me"
+mv _wildcard.localtest.me.pem  ${CERT_NAME}.pem
+mv _wildcard.localtest.me-key.pem  ${CERT_NAME}-key.pem
+
+# Generate kubernetes secret with the cert ${CERT_NAME}.pem
+kubectl create -n default secret tls ${CERT_NAME}-tls \
+    --cert=${CERT_NAME}.pem --key=${CERT_NAME}-key.pem \
+    --dry-run=client -o yaml | kubectl neat > secret-tls-${CERT_NAME}.yaml
+
+# Create
+kubectl apply -f secret-tls-${CERT_NAME}.yaml
+
+# Restart Traefik to load the new cert
+kubectl rollout restart deployment traefik -n traefik
+
+# Get the ArgoCD initial password and open the web UI
 argocd admin initial-password -n argocd | head -n 1
 
+```
+
+### Next steps: check the Vault-ESO Readme
+
+## Test
+
+```sh
 # GITEA_HOST="git.localhost"
 GITEA_HOST="git.localtest.me"
 
@@ -74,12 +133,14 @@ git -c http.sslVerify=false push local
 
 ## Traefik
 
+See above for Option 1
+
+### Option 2: update Traefik and make it use the mkcert custom CA
+
 Reference:
 
 - How to do it with Docker compose
   - <https://medium.com/@clintcolding/use-your-own-certificates-with-traefik-a31d785a6441>
-
-### Option 1: update Traefik and make it use the mkcert custom CA
 
 Relevant part of Helm values:
 
@@ -100,34 +161,9 @@ volumes:
   type: configMap
 ```
 
-### Option 2: generate a certificate with mkcert, and add it to the Gitea Ingress
+---
 
-Reference:
-
-- <https://chatgpt.com/share/672100f4-3d68-8006-8965-ba2211fbfeb0>
-
-```sh
-# Generate the certs with expiration in 20gg using kixelated/mkcert
-cd kixelated-mkcert/
-./mkcert -days=20 '*.localtest.me'
-
-# Check the certs
-openssl x509 -in _wildcard.localtest.me.pem -noout -text | bat -l yaml
-
-# The other certs are in the project `traefik-mkcert-docker`
-cd traefik-mkcert-docker/certs
-
-# Generate kubernetes secret with the cert ${GITEA_HOST}.pem
-kubectl create -n git secret tls git-localhost-tls \
-    --cert=${GITEA_HOST}.pem --key=${GITEA_HOST}-key.pem \
-    --dry-run=client -o yaml | kubectl neat > secret-tls-git-localhost.yaml
-
-# Create
-kubectl apply -f secret-tls-git-localhost.yaml
-
-# Update the gitea helm chart
-
-```
+## Old docs snippets
 
 Other certs
 
