@@ -27,7 +27,7 @@ data:
             margin-bottom: 20px;
           }
           ul {
-            list-style-type: none;
+            list-style-type: disc; /* Changed from none to disc */
             padding: 0;
           }
           li {
