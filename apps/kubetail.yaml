@@ -22,7 +22,7 @@ spec:
     ref: values
   destination:
     name: "in-cluster"
-    namespace: argo
+    namespace: kubetail
   syncPolicy:
     automated:
       prune: true
