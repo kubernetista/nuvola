@@ -51,7 +51,7 @@ data:
           <li><a href="https://git.localtest.me" target="_blank">git.localtest.me</a></li>
           <li><a href="https://argocd.localtest.me" target="_blank">argocd.localtest.me</a></li>
           <li><a href="https://vault.localtest.me" target="_blank">vault.localtest.me</a></li>
-          <li><a href="https://vault-test.localtest.me/" target="_blank">vault.localtest.me</a></li>
+          <li><a href="https://vault-eso-test.localtest.me" target="_blank">vault-eso-test.localtest.me</a></li>
           <li><a href="https://logs.localtest.me" target="_blank">logs.localtest.me</a></li>
           <li><a href="https://argoworkflows.localtest.me" target="_blank">argoworkflows.localtest.me</a></li>
           <li><a href="https://whoami.localtest.me" target="_blank">whoami.localtest.me</a></li>
