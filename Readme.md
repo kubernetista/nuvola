@@ -1,6 +1,6 @@
 # Quick Start
 
-Nuvola a Local Developer Platform.
+## Nuvola ☁️ is a Local Developer Platform
 
 ## 1. Create a Kubernetes cluster
 
