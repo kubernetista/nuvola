@@ -1,6 +1,6 @@
-# Quick Start
+# ☁️ Nuvola: a Local Developer Factory 🏭
 
-## Nuvola ☁️ is a Local Developer Platform
+Quick Start
 
 ## 1. Create a Kubernetes cluster
 
@@ -22,45 +22,39 @@ just k3d-cluster-create
 
 ```
 
-## 2. Wait ⏳
-
-#### Wait a few minutes to let ArgoCD deploy all the resources
-
-```
-# Watch pod creation
-kubectl get pod -n vault -w
-
-# Wait for the git namespace to be available
-kubectl get pod -n git -w
-```
-
-It usually takes between 2 and 5 minutes.
-
-In the mean time, you could check ArgoCD deployment progesess, either with the CLI, or
-from the web UI:
+## 2. Check ArgoCD deployment progress
 
 ```sh
 # Get the ArgoCD initial password
 argocd admin initial-password -n argocd | head -n 1
+```
 
-# Login
+To check the ArgoCD deployment progesess, open the ArgoCD web UI and login with user "admin" and the initial password from the previous command
+
+- <https://argocd.localhost/>
+
+Or, you can check using the CLI
+
+```sh
+# Watch pod creation
+kubectl get pod -A -w
+
+# Login to ArgoCD
 argocd login --insecure --grpc-web --username admin argocd.localtest.me
 
 # Check progress
 argocd app wait apps --health --sync
 
-# port forward
-kubectl port-forward service/argocd-server -n argocd 8080:443
-
-# Open the ArgoCD web UI and login with user "admin" and the password above
-open https://localhost:8080
-
 ```
 
-#### Once the ArgoCD apps are synced, proceed creating the secrets
+#### Wait until the git namespace is ready, then proceed creating the secrets
 
 ```sh
-# Create the required secrets
+# Wait until the 'git' namespace exists
+time until kubectl get namespace git >/dev/null 2>&1; do
+  sleep 1
+done
+# Then create the required secrets
 kubectl apply -f secrets/
 
 ```
@@ -76,7 +70,7 @@ The certificate will last 20 days (for security reasons) but you can adjust it.
 
 !!! warning
     🛫 If you already have a valid certificate, for example because you already generated
-    it following the steps below, then jump to [__step 3__](#3-install-the-certificates-and-reload-traefik) 🛫
+    it following the steps below, then jump to [__step 4__](#4-install-the-certificates-and-reload-traefik) 🛫
 
 ## 3. Generate the certs
 
