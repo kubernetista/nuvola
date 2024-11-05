@@ -1,6 +1,6 @@
 # ☁️ Nuvola: a Local Developer Factory 🏭
 
-Quick Start
+#### Quick Start
 
 ## 1. Create a Kubernetes cluster
 
