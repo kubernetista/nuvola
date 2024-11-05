@@ -6,6 +6,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
-  - configmap.yaml
+  - cm-index-html.yaml
 
 namespace: docs
