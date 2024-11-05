@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cloudnativepg-cluster-postgresql
+  name: cloudnativepg-operator-postgresql
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -9,11 +9,11 @@ spec:
   project: default
   sources:
   - repoURL: https://cloudnative-pg.github.io/charts
-    chart: cluster
+    chart: cloudnative-pg
     # helm search repo cnpg/cloudnative-pg --versions | head
-    targetRevision: 0.0.11
+    targetRevision: 0.22.1
     helm:
-      releaseName: cloudnativepg-cluster-postgresql
+      releaseName: cloudnative-pg-operator
       # valueFiles:
       # - $values/cloudnativepg-postgresql/values.yaml
       # - values.yaml
@@ -22,7 +22,7 @@ spec:
     ref: values
   destination:
     name: "in-cluster"
-    namespace: database
+    namespace: cnpg-system
   syncPolicy:
     automated:
       prune: true
