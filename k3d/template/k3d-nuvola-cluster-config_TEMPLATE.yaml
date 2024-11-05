@@ -26,22 +26,22 @@ ports:
   - port: 443:443
     nodeFilters:
       - loadbalancer
-  # Traefik dashboard
-  - port: 9000:9000
-    nodeFilters:
-      - loadbalancer
-  # git ssh
-  - port: 2222:2222
-    nodeFilters:
-      - loadbalancer
-  # gitea LB
-  - port: 3000:3000
-    nodeFilters:
-      - loadbalancer
-  # Vault LB
-  - port: 8200:8200
-    nodeFilters:
-      - loadbalancer
+##  # Traefik dashboard
+##  - port: 9000:9000
+##    nodeFilters:
+##      - loadbalancer
+##  # git ssh
+##  - port: 2222:2222
+##    nodeFilters:
+##      - loadbalancer
+##  # gitea LB
+##  - port: 3000:3000
+##    nodeFilters:
+##      - loadbalancer
+##  # Vault LB
+##  - port: 8200:8200
+##    nodeFilters:
+##      - loadbalancer
 env:
   - envVar: FOO=bar
     nodeFilters:
