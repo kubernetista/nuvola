@@ -28,7 +28,7 @@ argocd admin initial-password -n argocd | head -n 1
 
 ```sh
 # Generate the certs with expiration in 20gg using kixelated/mkcert
-cd kixelated-mkcert/
+cd kixelated-mkcert
 
 # Generate
 ./mkcert -days=20 '*.localtest.me'
