@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cnpg-pgsql-operator
+  name: cnpg-pgsql
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
@@ -13,7 +13,7 @@ spec:
     # helm search repo cnpg/cloudnative-pg --versions | head
     targetRevision: 0.22.1
     helm:
-      releaseName: cnpg-pgsql-operator
+      releaseName: cnpg-pgsql
       # valueFiles:
       # - $values/cloudnativepg-postgresql/values.yaml
       # - values.yaml
