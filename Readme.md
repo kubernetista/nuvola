@@ -1,6 +1,8 @@
 # ☁️ Nuvola: a Local Developer Factory 🏭
 
-#### Quick Start
+## Quick Start
+
+You need Docker Desktop running.
 
 ## 1. Create a Kubernetes cluster
 
