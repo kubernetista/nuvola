@@ -3,9 +3,6 @@
 # Variables
 # IMAGE_NAME := "fastapi-uv:latest"
 
-# default:
-#     echo 'Hello, world!'
-
 # List 📜 all recipes (default)
 help:
     @just --list
@@ -20,3 +17,7 @@ k3d-cluster-generate-config:
 k3d-cluster-create:
     k3d cluster create ${K3D_CLUSTER} --config=./k3d/cluster/k3d-${K3D_CLUSTER}-cluster-config.yaml
     @kubectl cluster-info
+
+# Push the git repo to the local remote, creating the repository if it doesn't exist
+git-push-local:
+    git push -o repo.private=false -u local main
