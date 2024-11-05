@@ -1,6 +1,6 @@
 cluster:
   # -- Number of instances
-  instances: 3
+  instances: 1
 
   storage:
     size: 8Gi
