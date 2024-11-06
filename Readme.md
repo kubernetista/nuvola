@@ -139,6 +139,15 @@ kubectl wait -n vault --for=condition=ready pod -l app.kubernetes.io/instance=va
 just setup-vault-eso-test-app
 ```
 
+## 6. Push a local repo to git and start building
+
+Use a just recipe to push the nuvola repository to Gitea runnin on Nubola
+
+```sh
+# Push to git creating the repo as public
+just git-push-local
+```
+
 ## 🎉 Configuration completed
 
 Congratulations, your Nuvola is ready! ☁️
