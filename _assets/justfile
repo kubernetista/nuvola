@@ -18,3 +18,8 @@ start-runner-in-docker:
 # Start 🚀 Gitea Runner in Docker 🐳, detaching 🫥
 start-runner-in-docker-background:
     docker compose -f compose.yaml up --detach
+
+# Start 🚀 Gitea Runner in Docker 🐳
+register-runner token:
+    # sudo act_runner daemon --config ./runner-config.yaml
+    act_runner register --no-interactive --token {{token}} --instance https://git.localtest.me/
