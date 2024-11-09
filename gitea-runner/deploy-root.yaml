@@ -39,7 +39,7 @@ spec:
         - name: GITEA_INSTANCE_URL
           value: http://gitea-http.git.svc.cluster.local:3000
         - name: GITEA_RUNNER_REGISTRATION_TOKEN
-          value: "FX5UApUIkhLADgRnB04ti7cYNftICkW6HXM0bZz1"
+          value: "KxKgUy419jnwAkkaBhu73PqD7VPbN7nhkKuE8eyY"
           # valueFrom:
           #   secretKeyRef:
           #     name: runner-secret
