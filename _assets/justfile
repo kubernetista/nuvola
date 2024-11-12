@@ -22,4 +22,4 @@ start-runner-in-docker-background:
 # Start 🚀 Gitea Runner in Docker 🐳
 register-runner token:
     # sudo act_runner daemon --config ./runner-config.yaml
-    act_runner register --no-interactive --token {{token}} --instance https://git.localtest.me/
+    act_runner register --config ./runner-config.yaml --no-interactive --token {{token}} --instance https://git.localtest.me/
