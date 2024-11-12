@@ -13,11 +13,11 @@ start-runner:
 
 # Start 🚀 Gitea Runner in Docker 🐳
 start-runner-in-docker:
-    docker compose -f compose.yaml up
+    docker compose -f act-runner-compose.yaml up
 
 # Start 🚀 Gitea Runner in Docker 🐳, detaching 🫥
 start-runner-in-docker-background:
-    docker compose -f compose.yaml up --detach
+    docker compose -f act-runner-compose.yaml up --detach
 
 # Register the local Gitea Runner with the provided token
 register-runner token:
