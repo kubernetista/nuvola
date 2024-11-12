@@ -19,7 +19,15 @@ start-runner-in-docker:
 start-runner-in-docker-background:
     docker compose -f compose.yaml up --detach
 
-# Start 🚀 Gitea Runner in Docker 🐳
+# Register the local Gitea Runner with the provided token
 register-runner token:
     # sudo act_runner daemon --config ./runner-config.yaml
     act_runner register --config ./runner-config.yaml --no-interactive --token {{token}} --instance https://git.localtest.me/
+
+# Register the local Gitea Runner and start it, getting the token from the Gitea Pod
+register-runner-auto:
+    #!/usr/bin/env bash
+    GITEA_POD_NAME=$(kubectl get pods -n git -l app.kubernetes.io/name=gitea -o jsonpath="{.items[0].metadata.name}")
+    GITEA_RUNNER_TOKEN=$(kubectl exec --stdin=true --tty=true -n git ${GITEA_POD_NAME} -c  gitea -- /bin/sh -c "gitea actions generate-runner-token")
+    echo "Retrieved token: ${GITEA_RUNNER_TOKEN}"
+    just register-runner ${GITEA_RUNNER_TOKEN}
