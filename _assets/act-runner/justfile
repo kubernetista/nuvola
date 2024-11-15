@@ -1,28 +1,28 @@
 # Justfile
 
 # Variables
-# IMAGE_NAME := "fastapi-uv:latest"
+IMAGE_NAME := "act-runner-root:latest"
 
 # List 📜 all recipes (default)
 help:
     @just --list
 
-# Start 🚀 Gitea Runner in Docker 🐳
+# Start 🚀 Gitea Runner with Docker compose
 start-runner:
-    sudo act_runner daemon --config ./act-runner-config.yaml
+    sudo act_runner daemon --config ./config.yaml
 
-# Start 🚀 Gitea Runner in Docker 🐳
-start-runner-in-docker:
-    docker compose -f act-runner-compose.yaml up
+# Start 🚀 Gitea Runner with Docker compose and stay attached
+start-runner-docker-attached:
+    docker compose up
 
-# Start 🚀 Gitea Runner in Docker 🐳, detaching 🫥
-start-runner-in-docker-background:
-    docker compose -f act-runner-compose.yaml up --detach
+# Start 🚀 Gitea Runner with Docker, detaching 🫥
+start-runner-docker:
+    docker compose up --detach
 
 # Register the local Gitea Runner with the provided token
 register-runner token:
-    # sudo act_runner daemon --config ./act-runner-config.yaml
-    act_runner register --config ./act-runner-config.yaml --no-interactive --token {{token}} --instance https://git.localtest.me/
+    # sudo act_runner daemon --config ./config.yaml
+    act_runner register --config ./config.yaml --no-interactive --token {{token}} --instance https://git.localtest.me/
 
 # Register the local Gitea Runner and start it, getting the token from the Gitea Pod
 register-runner-auto:
@@ -31,3 +31,7 @@ register-runner-auto:
     GITEA_RUNNER_TOKEN=$(kubectl exec --stdin=true --tty=true -n git ${GITEA_POD_NAME} -c  gitea -- /bin/sh -c "gitea actions generate-runner-token")
     echo "Retrieved token: ${GITEA_RUNNER_TOKEN}"
     just register-runner ${GITEA_RUNNER_TOKEN}
+
+# Build the container image
+build-container:
+    docker build -t {{IMAGE_NAME}} .
