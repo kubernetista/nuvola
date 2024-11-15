@@ -19,6 +19,6 @@ start-vault-attached:
 stop-vault:
     @docker compose -f compose.yaml down
 
-# Get the Vault root token and unseal keys (⚠️ can be executed only once!)
+# Get the Vault root token and unseal keys (⚠️ save them, as can it be executed only once!)
 init-vault:
     @-VAULT_ADDR='http://127.0.0.1:8200' docker exec -it vault vault operator init
