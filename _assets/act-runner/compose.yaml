@@ -4,12 +4,13 @@ services:
   act-runner-root:
     container_name: act-runner-root
 
-    image: act-runner-root:v20241112
     # image: ghcr.io/kubernetista/runner-root:v2
+    # image: act-runner-root:v20241112
+    image: act-runner-root:latest
 
     build:
       context: .
-      dockerfile: ./runner-root.dockerfile
+      dockerfile: ./Dockerfile
 
     environment:
       - REGISTRY_GITEA_HTTPS=git.localhost:8443
