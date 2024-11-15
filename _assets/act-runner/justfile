@@ -9,7 +9,7 @@ help:
 
 # Start 🚀 Gitea Runner in Docker 🐳
 start-runner:
-    sudo act_runner daemon --config ./runner-config.yaml
+    sudo act_runner daemon --config ./act-runner-config.yaml
 
 # Start 🚀 Gitea Runner in Docker 🐳
 start-runner-in-docker:
@@ -21,8 +21,8 @@ start-runner-in-docker-background:
 
 # Register the local Gitea Runner with the provided token
 register-runner token:
-    # sudo act_runner daemon --config ./runner-config.yaml
-    act_runner register --config ./runner-config.yaml --no-interactive --token {{token}} --instance https://git.localtest.me/
+    # sudo act_runner daemon --config ./act-runner-config.yaml
+    act_runner register --config ./act-runner-config.yaml --no-interactive --token {{token}} --instance https://git.localtest.me/
 
 # Register the local Gitea Runner and start it, getting the token from the Gitea Pod
 register-runner-auto:

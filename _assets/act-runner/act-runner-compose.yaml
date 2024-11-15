@@ -1,7 +1,7 @@
 # Customized Act Runner with root user for Docker-in-Docker
-name: runner-root
+name: act-runner-root
 services:
-  runner-root:
+  act-runner-root:
     container_name: act-runner-root
 
     image: act-runner-root:v20241112
