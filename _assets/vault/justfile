@@ -1,0 +1,24 @@
+# Justfile
+
+# Variables
+# EXAMPLE_VAR := "example"
+
+# List 📜 all recipes (default)
+help:
+    @just --list
+
+# Start Vault 🔐 and detach 🫥
+start-vault:
+    @docker compose -f compose.yaml up --detach
+
+# Start Vault 🔐 and stay attached
+start-vault-attached:
+    @docker compose -f compose.yaml up
+
+# Start Vault 🔐 and detach 🫥
+stop-vault:
+    @docker compose -f compose.yaml down
+
+# Get the Vault root token and unseal keys (⚠️ can be executed only once!)
+init-vault:
+    @-VAULT_ADDR='http://127.0.0.1:8200' docker exec -it vault vault operator init
