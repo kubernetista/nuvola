@@ -17,4 +17,12 @@ services:
       - "8200:8200"
     cap_add:
       - IPC_LOCK
-    restart: always
+    restart: unless-stopped
+
+    networks:
+      - vault-net
+    hostname: vault.docker.internal
+
+networks:
+  vault-net:
+    name: vault-net
