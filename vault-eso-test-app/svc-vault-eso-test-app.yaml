@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault-eso-test-app
+  labels:
+    app.kubernetes.io/instance: vault-eso-test-app
+    app.kubernetes.io/name: vault-eso-test-app
+spec:
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/instance: vault-eso-test-app
+    app.kubernetes.io/name: vault-eso-test-app
+  type: ClusterIP

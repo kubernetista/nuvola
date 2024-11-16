@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-eso-test-app
+  labels:
+    app.kubernetes.io/instance: vault-eso-test-app
+    app.kubernetes.io/name: vault-eso-test-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault-eso-test-app
+  template:
+    metadata:
+      labels:
+        app: vault-eso-test-app
+        app.kubernetes.io/instance: vault-eso-test-app
+        app.kubernetes.io/name: vault-eso-test-app
+    spec:
+      containers:
+      - name: vault-eso-test-app
+        image: ghcr.io/kubernetista/vault-eso-test-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: mysql
+          mountPath: "/secrets"
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+      volumes:
+      - name: mysql
+        secret:
+          secretName: mysql-credentials

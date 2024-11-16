@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vault-eso-test-app
+  labels:
+    app.kubernetes.io/instance: vault-eso-test-app
+    app.kubernetes.io/name: vault-eso-test-app
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: vault-test.localtest.me
+    http:
+      paths:
+      - backend:
+          service:
+            name: vault-eso-test-app
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+  - host: vault-eso-test.localtest.me
+    http:
+      paths:
+      - backend:
+          service:
+            name: vault-eso-test-app
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
