@@ -1,7 +1,7 @@
 # catthehacker/ubuntu:runner-latest
 FROM ghcr.io/catthehacker/ubuntu:runner-latest
 
-# ARG GITEA_HOSTNAME="git.localtest.me"
+ARG GITEA_HOSTNAME="git.localtest.me"
 
 # Switch to root user
 USER root
