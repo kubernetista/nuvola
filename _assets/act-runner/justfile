@@ -1,37 +1,48 @@
 # Justfile
 
 # Variables
-IMAGE_NAME := "act-runner-root:latest"
+IMAGE_NAME := "act-runner-nuvola:latest"
+SCALE_RUNNERS := "3"
+COMPOSE_CONFIG := "compose-scale.yaml"
 
 # List 📜 all recipes (default)
 help:
     @just --list
 
-# Start 🚀 Gitea Runner with Docker compose
-start-runner:
-    sudo act_runner daemon --config ./config.yaml
+# # Start 🚀 Gitea Runner with Docker compose
+# start-runner:
+#     sudo act_runner daemon --config ./config.yaml
 
-# Start 🚀 Gitea Runner with Docker compose and stay attached
-start-runner-docker-attached:
-    docker compose up
+# # Register the local Gitea Runner with the provided token
+# register-runner token:
+#     # sudo act_runner daemon --config ./config.yaml
+#     act_runner register --config ./config.yaml --no-interactive --token {{token}} --instance https://git.localtest.me/
 
-# Start 🚀 Gitea Runner with Docker, detaching 🫥
-start-runner-docker:
-    docker compose up --detach
-
-# Register the local Gitea Runner with the provided token
-register-runner token:
-    # sudo act_runner daemon --config ./config.yaml
-    act_runner register --config ./config.yaml --no-interactive --token {{token}} --instance https://git.localtest.me/
-
-# Register the local Gitea Runner and start it, getting the token from the Gitea Pod
-register-runner-auto:
-    #!/usr/bin/env bash
-    GITEA_POD_NAME=$(kubectl get pods -n git -l app.kubernetes.io/name=gitea -o jsonpath="{.items[0].metadata.name}")
-    GITEA_RUNNER_TOKEN=$(kubectl exec --stdin=true --tty=true -n git ${GITEA_POD_NAME} -c  gitea -- /bin/sh -c "gitea actions generate-runner-token")
-    echo "Retrieved token: ${GITEA_RUNNER_TOKEN}"
-    just register-runner ${GITEA_RUNNER_TOKEN}
+# # Register the local Gitea Runner and start it, getting the token from the Gitea Pod
+# register-runner-auto:
+#     #!/usr/bin/env bash
+#     GITEA_POD_NAME=$(kubectl get pods -n git -l app.kubernetes.io/name=gitea -o jsonpath="{.items[0].metadata.name}")
+#     GITEA_RUNNER_TOKEN=$(kubectl exec --stdin=true --tty=true -n git ${GITEA_POD_NAME} -c  gitea -- /bin/sh -c "gitea actions generate-runner-token")
+#     echo "Retrieved token: ${GITEA_RUNNER_TOKEN}"
+#     just register-runner ${GITEA_RUNNER_TOKEN}
 
 # Build the container image
 build-container:
-    docker build -t {{IMAGE_NAME}} .
+    docker compose -f {{COMPOSE_CONFIG}} build
+
+start-runner:
+    docker compose -f {{COMPOSE_CONFIG}} up --scale act-runner={{SCALE_RUNNERS}}
+
+start-runner-detached:
+    docker compose -f {{COMPOSE_CONFIG}} up --scale act-runner={{SCALE_RUNNERS}} --detach
+
+stop-runner:
+    docker compose -f {{COMPOSE_CONFIG}} down
+
+# Start 🚀 Gitea Runner with Docker compose and stay attached
+# start-runner-docker-attached:
+#     docker compose up
+
+# # Start 🚀 Gitea Runner with Docker, detaching 🫥
+# start-runner-docker:
+#     docker compose up --detach
