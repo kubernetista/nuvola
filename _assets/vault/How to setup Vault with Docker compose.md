@@ -120,6 +120,9 @@ vault policy write default ./tmp/vault-new-policy.hcl
 # Create the resources for Extrenal Secrets Operator and the ESO test app
 kubectl apply -f ./yaml/
 
+# Update the secret in Vault to see if it's propagated to the test app
+./increment-vault-secret-version.sh
+
 # Restart external secrets to speed up the process
 kubectl rollout restart -n external-secrets external-secrets
 
@@ -130,6 +133,6 @@ kubectl rollout restart deployment vault-eso-test-app -n default
 stern -t -n external-secrets external-secrets
 
 # check update in the vault-test-app (with http, viddy and htmltidy CLI tools)
-viddy -n 5 -ds 'http https://vault-test.localtest.me/ | tidy -qi -w 0 --tidy-mark no -f /dev/null'
+viddy -n 5 -dbs 'http https://vault-test.localtest.me/ | tidy -qi -w 0 --tidy-mark no -f /dev/null | bat -pP --color=always'
 
 ```
