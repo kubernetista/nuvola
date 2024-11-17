@@ -1,0 +1,42 @@
+# Customized Act Runner with root user for Docker-in-Docker
+name: act-runner-nuvola
+services:
+  act-runner-root:
+    container_name: act-runner-nuvola
+
+    # image: ghcr.io/kubernetista/runner-root:v2
+    # image: act-runner-root:v20241112
+    # image: act-runner-root:latest
+    # image: gitea/act_runner:nightly-dind
+    # image: gitea/act_runner:latest
+    image: ghcr.io/kubernetista/act-runner-nuvola:v5
+
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
+
+    environment:
+      # - REGISTRY_GITEA_HTTPS=git.localhost:8443
+      # - REGISTRY_USERNAME=aruba-demo
+      # - REGISTRY_PASSWORD=NeOzersChqN9fydl
+      CONFIG_FILE: /config.yaml
+      GITEA_INSTANCE_URL: "https://git.localtest.me/"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "KxKgUy419jnwAkkaBhu73PqD7VPbN7nhkKuE8eyY"
+      GITEA_RUNNER_NAME: "act-runner-docker"
+      GITEA_RUNNER_LABELS: "macos"
+
+    volumes:
+      - ./config.yaml:/config.yaml
+      # - ./full-ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./run.sh:/opt/act/run.sh
+      - ./git.localtest.me.crt:/usr/share/ca-certificates/extra/git.localtest.me.crt
+
+    privileged: true
+
+    # entrypoint: []
+    # command: sleep infinity
+
+    network_mode: host
+    restart: unless-stopped
