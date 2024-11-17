@@ -1,0 +1,24 @@
+# compose.yaml
+name: act-runner-nuvola
+services:
+  act-runner:
+    image: ghcr.io/kubernetista/act-runner-nuvola:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      CONFIG_FILE: /config.yaml
+      GITEA_INSTANCE_URL: "https://git.localtest.me/"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "KxKgUy419jnwAkkaBhu73PqD7VPbN7nhkKuE8eyY"
+      # Name will be automatically suffixed with container number
+      GITEA_RUNNER_NAME: "act-runner-docker-${INSTANCE_NUMBER:-0}"
+      GITEA_RUNNER_LABELS: "docker"
+    volumes:
+      - ./config.yaml:/config.yaml
+      - ./data-${INSTANCE_NUMBER:-0}:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./run.sh:/opt/act/run.sh
+      - ./git.localtest.me.crt:/usr/share/ca-certificates/extra/git.localtest.me.crt
+    privileged: true
+    network_mode: host
+    restart: unless-stopped
