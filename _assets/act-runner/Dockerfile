@@ -2,6 +2,7 @@
 FROM ghcr.io/catthehacker/ubuntu:runner-latest
 
 ARG GITEA_HOSTNAME="git.localtest.me"
+ENV GITEA_HOSTNAME=${GITEA_HOSTNAME}
 
 # Switch to root user
 USER root
@@ -17,13 +18,13 @@ RUN mkdir -p /usr/share/ca-certificates/extra \
     && mkdir -p /etc/docker/certs.d/git.localtest.me
 
 # Copy and install custom CA certificate
-COPY ./git.localtest.me.crt /usr/share/ca-certificates/extra/
-RUN echo "extra/git.localtest.me.crt" >> /etc/ca-certificates.conf \
+COPY ./${GITEA_HOSTNAME}.crt /usr/share/ca-certificates/extra/
+RUN echo "extra/${GITEA_HOSTNAME}.crt" >> /etc/ca-certificates.conf \
     && update-ca-certificates
 
 # Configure Docker to trust the certificate
-RUN cp /usr/share/ca-certificates/extra/git.localtest.me.crt \
-    /etc/docker/certs.d/git.localtest.me/ca.crt
+RUN cp /usr/share/ca-certificates/extra/${GITEA_HOSTNAME}.crt \
+    /etc/docker/certs.d/${GITEA_HOSTNAME}/ca.crt
 
 # Add run.sh
 COPY ./run.sh /usr/local/bin/run.sh
