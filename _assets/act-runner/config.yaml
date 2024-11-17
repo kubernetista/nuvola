@@ -27,7 +27,8 @@ runner:
   # Any running jobs that haven't finished after this timeout will be cancelled.
   shutdown_timeout: 0s
   # Whether skip verifying the TLS certificate of the Gitea instance.
-  insecure: false
+  # insecure: false
+  insecure: true
   # The timeout for fetching the job from the Gitea instance.
   fetch_timeout: 5s
   # The interval for fetching the job from the Gitea instance.
