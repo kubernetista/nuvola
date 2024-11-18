@@ -11,7 +11,7 @@ spec:
   - repoURL: https://charts.bitnami.com/bitnami
     chart: jenkins
     # helm search repo bitnami/jenkins --versions | head
-    targetRevision: 13.4.23
+    targetRevision: 13.4.27
     helm:
       releaseName: jenkins
       valueFiles:

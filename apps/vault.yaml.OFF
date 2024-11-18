@@ -11,7 +11,7 @@ spec:
   - repoURL: https://helm.releases.hashicorp.com
     chart: vault
     # helm search repo hashicorp/vault --versions | head
-    targetRevision: 0.28.1
+    targetRevision: 0.29.0
     helm:
       releaseName: vault
       valueFiles:

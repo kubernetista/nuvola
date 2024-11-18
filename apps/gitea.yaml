@@ -11,7 +11,7 @@ spec:
   - repoURL:  https://dl.gitea.com/charts/
     chart: gitea
     # helm search repo gitea-charts/gitea --versions | head
-    targetRevision: 10.5.0
+    targetRevision: 10.6.0
     helm:
       releaseName: gitea
       valueFiles:

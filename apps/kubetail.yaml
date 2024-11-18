@@ -11,7 +11,7 @@ spec:
   - repoURL: https://kubetail-org.github.io/helm-charts/
     chart: kubetail
     # helm search repo kubetail/kubetail --versions | head
-    targetRevision: 0.8.4
+    targetRevision: 0.8.5
     helm:
       releaseName: kubetail
       valueFiles:

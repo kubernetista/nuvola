@@ -11,7 +11,7 @@ spec:
   - repoURL: https://traefik.github.io/charts
     chart: traefik
     # helm search repo traefik/traefik --versions | head
-    targetRevision: 32.1.1
+    targetRevision: 33.0.0
     helm:
       releaseName: traefik
       valueFiles:
