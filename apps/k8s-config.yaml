@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8s-config
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    path: k8s-config
+    # repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/nuvola.git
+    repoURL:https://github.com/kubernetista/nuvola.git
+    targetRevision: HEAD
+  destination:
+    name: "in-cluster"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
