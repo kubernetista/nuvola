@@ -21,4 +21,18 @@ stop-vault:
 
 # Get the Vault root token and unseal keys (⚠️ save them, as can it be executed only once!)
 init-vault:
-    @-VAULT_ADDR='http://127.0.0.1:8200' docker exec -it vault vault operator init
+    #@-VAULT_ADDR='http://127.0.0.1:8200' vault operator init
+    @-docker exec -it vault vault operator init
+
+# Unseal the Vault
+unseal-vault:
+    @echo "\n🔒 Unseal Vault - step 1/3"
+    @-docker exec -it vault vault operator unseal
+    @echo "\n🔒 Unseal Vault - step 2/3"
+    @-docker exec -it vault vault operator unseal
+    @echo "\n🔒 Unseal Vault - step 3/3"
+    @-docker exec -it vault vault operator unseal
+    @echo "\n🔓 Now login to Vault"
+    @-docker exec -it vault vault login
+    @echo "\n🔑 Vault status"
+    @-docker exec -it vault vault status
