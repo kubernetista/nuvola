@@ -1,0 +1,6 @@
+project: test
+providers:
+  hashicorp_vault:
+    env_sync:
+      path: secret/data/test
+
