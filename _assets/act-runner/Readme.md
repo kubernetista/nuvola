@@ -1,10 +1,33 @@
 # Act Runner
 
-## token
+## Update token in Vault
 
 ```sh
 #gitea --config /etc/gitea/app.ini actions generate-runner-token
-kubectl exec --stdin=true --tty=true $(k match-name debug-shell) -- /bin/sh -c "gitea actions generate-runner-token"
+
+# After a Gitea reinstallation, get the current (old) token from Vault:
+GITEA_RUNNER_REGISTRATION_TOKEN=$(kubectl exec -n git --stdin=true --tty=true $(kubectl match-name -n git gitea) -c gitea -- /bin/sh -c "gitea actions generate-runner-token")
+
+# Get a Vault token to save the current token in Vault:
+export VAULT_TOKEN="$(vault token create -ttl=24h -format=json | jq -r .auth.client_token)"
+
+# Save the updated Gitea runner registration token in Vault:
+vault kv put secret/gitea/runner-registration-token GITEA_RUNNER_REGISTRATION_TOKEN="${GITEA_RUNNER_REGISTRATION_TOKEN}"
+
+```
+
+## Start the runners
+
+```sh
+# Check that the env var is present (via direnv and teller)
+teller show
+echo ${GITEA_RUNNER_REGISTRATION_TOKEN}
+
+# Start and register the runners
+just start-runners
+
+# In case the env var is not present you can also invoke teller directly
+teller run -- just start-runner
 
 ```
 
