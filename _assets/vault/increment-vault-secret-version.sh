@@ -2,7 +2,7 @@
 
 # Increment the secret version in Vault
 
-SECRET_NAME="mysql_credentials"
+SECRET_NAME="fake-db-credentials"
 SECRET_URL="test.example.com"
 SECRET_USER="test-username"
 SECRET_PASS="test-password"
