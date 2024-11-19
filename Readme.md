@@ -27,37 +27,67 @@ just k3d-cluster-create
 ## 2. Check ArgoCD deployment progress
 
 ```sh
+# Wait until the 'argocd' namespace exists
+time until kubectl get namespace argocd >/dev/null 2>&1; do
+  sleep 1
+done
+
 # Get the ArgoCD initial password
+just argocd-get-password
+
+# or
 argocd admin initial-password -n argocd | head -n 1
-```
 
-To check the ArgoCD deployment progesess, open the ArgoCD web UI and login with user "admin" and the initial password from the previous command
-
-- <https://argocd.localhost/>
-
-Or, you can check using the CLI
-
-```sh
 # Watch pod creation
 kubectl get pod -A -w
 
 # Login to ArgoCD
-argocd login --insecure --grpc-web --username admin argocd.localtest.me
+argocd login --insecure --grpc-web --username admin argocd.localhost
 
-# Check progress
+# Sync
+argocd app sync apps
+
+# Check progress via CLI
 argocd app wait apps --health --sync
 
 ```
 
-#### Wait until the git namespace is ready, then proceed creating the secrets
+You can also check the ArgoCD deployment progesess, via the web UI
+Login with user "admin" and the initial password from the previous steps.
+
+- <https://argocd.localhost/>
+
+
+#### Wait until the git namespace is ready
 
 ```sh
 # Wait until the 'git' namespace exists
 time until kubectl get namespace git >/dev/null 2>&1; do
   sleep 1
 done
-# Then create the required secrets
-kubectl apply -f secrets/
+```
+
+## Connect ExternalSecrets to Vault
+
+```sh
+# # Create the required secrets
+# kubectl apply -f secrets/
+
+# Configure ExternalSecrets and create secrets
+kubectl apply -k ./k8s/
+
+# Create main Vault secret ${VAULT_TOKEN}
+just create-main-vault-secret
+
+# Check that the secret is created by ExternalSecrets
+kubectl get secret db-credentials
+
+# Check that the secret is created by ExternalSecrets
+until kubectl get secret fake-db-credentials &> /dev/null; do
+  echo "Waiting for secret..."
+  sleep 2
+done
+echo "Secret exists"
 
 ```
 
