@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 ### Status / Headline
 
 - Setup is now almost automatic, completes in about 5 minutes
+- works with:
+  - fastapi-uv `v0.3.8`
+  - nuvola-docs `v0.2.1-11-g53b7`
 
 ### Added
 
