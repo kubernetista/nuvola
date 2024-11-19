@@ -46,7 +46,7 @@ spec:
         # - whoami.localhost
         - whoami.localtest.me
       # secretName: wildcard-localhost-tls
-      secretName: wildcard-localtest-me-tls
+      secretName: tls-wildcard-localtest-me
   rules:
     # - host: "whoami.localhost"
     - host: "whoami.localtest.me"
