@@ -1,0 +1,47 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+-
+
+## [0.3.3] - 2024-11-19
+
+### Status / Headline
+
+- Setup is now almost automatic, completes in about 5 minutes
+
+### Added
+
+-
+
+### Changed
+
+- Completed migration to external-secrets
+
+### Regressions
+
+- Gitea Actions are disabled / not configurable
+
+### Deprecated
+
+-
+
+### Removed
+
+-
+
+### Fixed
+
+-
+
+### Security
+
+-
+
+## [0.3.2] - 2024-11-17
+
+### Status
+
+- making progress, everything ok so far
