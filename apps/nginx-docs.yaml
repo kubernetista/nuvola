@@ -10,8 +10,6 @@ spec:
     repoURL: https://github.com/kubernetista/nuvola.git
     targetRevision: HEAD
     path: nginx-docs
-    # kustomize:
-    #   namePrefix: debug-shell-
   destination:
     name: "in-cluster"
     namespace: default
