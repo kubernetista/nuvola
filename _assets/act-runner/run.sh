@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
-GITEA_HOSTNAME="git.localtest.me"
+set -euo pipefail
+
+# GITEA_HOSTNAME="git.localtest.me"
+
+echo  "   ======"
+echo "GITEA_RUNNER_NAME: ${GITEA_RUNNER_NAME}"
+echo "GITEA_HOSTNAME: ${GITEA_HOSTNAME}"
+echo  "   ======"
+env | sort
+echo  "   ======"
 
 # # Add Docker daemon cert configuration
 # DOCKER_CERT_DIR="/etc/docker/certs.d/${GITEA_HOSTNAME}"
@@ -43,6 +52,7 @@ fi
 # Use the same ENV variable names as https://github.com/vegardit/docker-gitea-act-runner
 test -f "$RUNNER_STATE_FILE" || echo "$RUNNER_STATE_FILE is missing or not a regular file"
 
+try=0
 if [[ ! -s "$RUNNER_STATE_FILE" ]]; then
   try=$((try + 1))
   success=0
@@ -52,6 +62,8 @@ if [[ ! -s "$RUNNER_STATE_FILE" ]]; then
   # the context of a single docker-compose, something similar could be done via healthchecks, but
   # this is more flexible.
   while [[ $success -eq 0 ]] && [[ $try -lt ${GITEA_MAX_REG_ATTEMPTS:-10} ]]; do
+    echo "Trying to register runner (attempt $try):"
+    echo -e "  act_runner register --instance ${GITEA_INSTANCE_URL} --token ${GITEA_RUNNER_REGISTRATION_TOKEN} --name ${GITEA_RUNNER_NAME:-`hostname`} ${CONFIG_ARG} ${EXTRA_ARGS} --no-interactive\n"
     act_runner register \
       --instance "${GITEA_INSTANCE_URL}" \
       --token    "${GITEA_RUNNER_REGISTRATION_TOKEN}" \
