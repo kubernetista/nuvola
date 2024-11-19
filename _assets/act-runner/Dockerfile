@@ -1,8 +1,9 @@
 # catthehacker/ubuntu:runner-latest
 FROM ghcr.io/catthehacker/ubuntu:runner-latest
 
-ARG GITEA_HOSTNAME="git.localtest.me"
-ENV GITEA_HOSTNAME=${GITEA_HOSTNAME}
+# ARG GITEA_HOSTNAME="git.localtest.me"
+ARG GITEA_HOSTNAME="${GITEA_HOSTNAME}"
+# ENV GITEA_HOSTNAME=${GITEA_HOSTNAME}
 
 # Switch to root user
 USER root
@@ -10,6 +11,7 @@ USER root
 # Update Ubuntu to latest packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+    less \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
