@@ -6,7 +6,8 @@ services:
 
     environment:
       - VAULT_ADDR=http://127.0.0.1:8200
-      - VAULT_API_ADDR=http://127.0.0.1:8200
+      # - VAULT_API_ADDR=http://127.0.0.1:8200
+      # - VAULT_LOG_LEVEL=debug
     entrypoint: vault server -config=/vault/config/vault.json
     volumes:
       - ./volumes/logs:/vault/logs
