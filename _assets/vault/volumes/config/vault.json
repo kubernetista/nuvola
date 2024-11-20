@@ -1,5 +1,5 @@
 {
-    "backend": {
+    "storage": {
         "file": {
             "path": "/vault/file"
         }
@@ -10,5 +10,14 @@
             "tls_disable": 1
         }
     },
-    "ui": true
+    "api_addr": "http://127.0.0.1:8200",
+    "ui": true,
+    "storage_configuration": {
+        "secret/": {
+            "type": "kv-v2"
+        }
+    },
+    "log_level": "trace",
+    "log_format": "standard",
+    "log_file": "/vault/logs/vault.log"
 }
