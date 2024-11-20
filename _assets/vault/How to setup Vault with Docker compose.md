@@ -1,6 +1,8 @@
 # How to setup Vault with Docker compose for the Nuvola environment
 
 ```sh
+cd _assets/vault/
+
 mkdir -p volumes/{logs,file,config}
 
 touch volumes/{logs,file,config}/.gitkeep
@@ -59,6 +61,12 @@ export VAULT_ADDR='<http:///127.0.0.1:8200>'
 
 docker compose up -d
 
+
+# Check status
+http http://127.0.0.1:8200/v1/sys/health
+
+vault status
+
 vault operator init
 vault operator unseal
 
@@ -71,12 +79,21 @@ vault login
 # set vault
 export VAULT_ADDR='<http://127.0.0.1:8200>'
 
-# Enable KV secrets engine version 2
-# Using a container
-docker exec -it vault vault secrets enable -path=secret kv-v2
+# 🛑 Already done with the config file
+## Enable KV secrets engine version 2
+## Using a container
+# docker exec -it vault vault secrets enable -path=secret kv-v2
+## Using a local vault CLI
+# vault secrets enable -path=secret kv-v2
+# vault secrets enable kv-v2
 
-# Using a local vault CLI
-vault secrets enable -path=secret kv-v2
+
+# Create long-lived token
+VAULT_ADDR='<http://127.0.0.1:8200>'
+vault token create \
+    -policy=external-secrets \
+    -no-default-policy \
+    -format=json | jq -r ".auth.client_token"
 
 # Create policy file
 cat > vault-policy.hcl << EOF
@@ -87,6 +104,21 @@ path "secret/metadata/*" {
   capabilities = ["list"]
 }
 EOF
+
+❯❯ cat kv-read-policy.hcl
+path "secret/data/*" {
+  capabilities = ["read", "list"]
+}
+path "secret/metadata/*" {
+  capabilities = ["read", "list"]
+}
+
+❯❯ cat vault-policy-addendum.hcl
+# NUVOLA: access for test apps
+path "secret/*" {
+  capabilities = [ "read", "list" ]
+}
+
 
 # Create policy
 VAULT_ADDR='<http://127.0.0.1:8200>'
@@ -103,7 +135,7 @@ kubectl create secret generic vault-token \
 
 ```
 
-## Updaste policy
+## Update policy
 
 ```sh
 # Read the current default policy, and add the new policy at the end
@@ -114,7 +146,53 @@ cat ./tmp/vault-default-policy.hcl ./vault-policy-addendum.hcl > ./tmp/vault-new
 vault policy write default ./tmp/vault-new-policy.hcl
 ```
 
-# Create kubernetes resources
+# Test access with teller
+
+```sh
+cat <<EOF > .teller.yml
+project: test
+providers:
+  hashicorp_vault:
+    env_sync:
+      path: secret/data/test
+EOF
+
+#vault token create -ttl=24h -format=json | jq -r .auth.client_token
+export VAULT_TOKEN="$(vault token create -ttl=24h -format=json | jq -r .auth.client_token)"
+export VAULT_ADDR="http://127.0.0.1:8200"
+teller show
+teller env
+```
+
+# Create a policy for Vault access
+
+In case of need.
+
+```sh
+# Create policy file
+cat > kv-read-policy.hcl << 'EOF'
+path "secret/data/*" {
+  capabilities = ["read", "list"]
+}
+
+path "secret/metadata/*" {
+  capabilities = ["read", "list"]
+}
+EOF
+
+# Write policy to Vault
+VAULT_ADDR='http://127.0.0.1:8200' vault policy write kv-reader kv-read-policy.hcl
+
+# Verify policy
+VAULT_ADDR='http://127.0.0.1:8200' vault policy read kv-reader
+
+# Create token with policy
+VAULT_ADDR='http://127.0.0.1:8200' vault token create -policy=kv-reader -format=json | jq -r .auth.client_token
+```
+
+## Create kubernetes resources
+
+For the vault-eso-test-app
 
 ```sh
 # Create the resources for Extrenal Secrets Operator and the ESO test app
