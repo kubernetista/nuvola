@@ -55,39 +55,34 @@ argocd app wait apps --health --sync
 You can also check the ArgoCD deployment progesess, via the web UI
 Login with user "admin" and the initial password from the previous steps.
 
+⚠️ This url is temporary, the correct one with the cert will ... ❓💭
+
 - <https://argocd.localhost/>
-
-
-#### Wait until the git namespace is ready
-
-```sh
-# Wait until the 'git' namespace exists
-time until kubectl get namespace git >/dev/null 2>&1; do
-  sleep 1
-done
-```
 
 ## Connect ExternalSecrets to Vault
 
 ```sh
-# # Create the required secrets
+# ❌ # Create the required secrets
 # kubectl apply -f secrets/
 
-# Configure ExternalSecrets and create secrets
-kubectl apply -k ./k8s/
+# ❌ # Configure ExternalSecrets and create secrets
+# kubectl apply -k ./k8s/
+
+# Wait until the 'git' namespace is available
+time until kubectl get namespace git >/dev/null 2>&1; do
+  sleep 1
+done
+echo -e "\ngit namespace ready"
 
 # Create main Vault secret ${VAULT_TOKEN}
 just create-main-vault-secret
 
-# Check that the secret is created by ExternalSecrets
-kubectl get secret db-credentials
-
-# Check that the secret is created by ExternalSecrets
+# Wait until the secret is created by ExternalSecrets
 until kubectl get secret fake-db-credentials &> /dev/null; do
   echo "Waiting for secret..."
   sleep 2
 done
-echo "Secret exists"
+kubectl get secret fake-db-credentials -o yaml | yq '.data.credentials | @base64d'
 
 ```
 
