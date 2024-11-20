@@ -1,2 +1,3 @@
-# Ignore everything inside the file directory
+# Ignore content of file and logs volumes
 volumes/file
+volumes/logs
