@@ -5,8 +5,20 @@
 ```sh
 #gitea --config /etc/gitea/app.ini actions generate-runner-token
 
-# After a Gitea reinstallation, get the current (old) token from Vault:
-GITEA_RUNNER_REGISTRATION_TOKEN=$(kubectl exec -n git --stdin=true --tty=true $(kubectl match-name -n git gitea) -c gitea -- /bin/sh -c "gitea actions generate-runner-token")
+# After a Gitea reinstallation, get the current (old) token from Vault
+# using tr to remove both newline and carriage return
+GITEA_RUNNER_REGISTRATION_TOKEN=$(kubectl exec -n git --stdin=true --tty=true $(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name) -c gitea -- /bin/sh -c "gitea actions generate-runner-token" | tr -d '\r\n')
+
+echo ${GITEA_RUNNER_REGISTRATION_TOKEN}
+
+# Verify no newline
+echo -n "$GITEA_RUNNER_REGISTRATION_TOKEN" | hexdump -C
+
+# Eventually clean the existing variable
+GITEA_RUNNER_REGISTRATION_TOKEN=$(echo -n "$GITEA_RUNNER_REGISTRATION_TOKEN" | tr -d '\r\n')
+
+# Check if there is already a Vault token
+echo $VAULT_TOKEN
 
 # Get a Vault token to save the current token in Vault:
 export VAULT_TOKEN="$(vault token create -ttl=24h -format=json | jq -r .auth.client_token)"
@@ -14,17 +26,20 @@ export VAULT_TOKEN="$(vault token create -ttl=24h -format=json | jq -r .auth.cli
 # Save the updated Gitea runner registration token in Vault:
 vault kv put secret/gitea/runner-registration-token GITEA_RUNNER_REGISTRATION_TOKEN="${GITEA_RUNNER_REGISTRATION_TOKEN}"
 
+# Check
+vault kv get -format=json -mount="secret" "gitea/runner-registration-token" | jq
+
 ```
 
 ## Start the runners
 
 ```sh
-# Check that the env var is present (via direnv and teller)
-teller show
+# Check that the env var is present (via direnv and teller, requires VAULT_TOKEN to be set)
+teller env
 echo ${GITEA_RUNNER_REGISTRATION_TOKEN}
 
 # Start and register the runners
-just start-runners
+just start-runner
 
 # In case the env var is not present you can also invoke teller directly
 teller run -- just start-runner
@@ -34,6 +49,30 @@ teller run -- just start-runner
 ## Configuration in Docker
 
 - <https://docs.gitea.com/usage/actions/act-runner#install-with-the-docker-image>
+
+## Start with docker for debug
+
+```sh
+# start the container
+docker run -it --network host \
+  -v ./data-1:/data \
+  -v ./config.yaml:/config.yaml \
+  -v ./run.sh:/opt/act/run.sh  \
+  ghcr.io/kubernetista/act-runner-nuvola:latest bash
+
+# export the required vars
+export GITEA_RUNNER_NAME=test
+export GITEA_RUNNER_LABELS=docker
+# export GITEA_RUNNER_LABELS=macos
+export CONFIG_FILE=/config.yaml
+export GITEA_HOSTNAME=git.localtest.me
+export GITEA_INSTANCE_URL=https://${GITEA_HOSTNAME}/
+export GITEA_RUNNER_REGISTRATION_TOKEN=eOrMkkIqEmbO4SplU9WNLv3TxsBc5E5R2l9nd9DN
+
+# start the entrypoint script
+/opt/act/run.sh
+
+```
 
 ## Fixing problem in the log below
 
@@ -62,7 +101,7 @@ The problem was fixed by updating the config.yaml file
 2024-11-17 00:48:56 Waiting to retry ...
 ```
 
-## Build a cvustom act-runner image
+## Build a custom act-runner image
 
 - <https://docs.gitea.com/usage/actions/act-runner#install-with-the-docker-image>
 
