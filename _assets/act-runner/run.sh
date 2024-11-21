@@ -6,10 +6,20 @@ set -euo pipefail
 
 echo  "   ======"
 echo "GITEA_RUNNER_NAME: ${GITEA_RUNNER_NAME}"
+echo "GITEA_RUNNER_LABELS: ${GITEA_RUNNER_LABELS}"
 echo "GITEA_HOSTNAME: ${GITEA_HOSTNAME}"
+echo "GITEA_INSTANCE_URL: ${GITEA_INSTANCE_URL}"
+echo "CONFIG_FILE: ${CONFIG_FILE}"
+echo "GITEA_RUNNER_REGISTRATION_TOKEN: ${GITEA_RUNNER_REGISTRATION_TOKEN}"
+
 echo  "   ======"
 env | sort
 echo  "   ======"
+
+# Sleep random time between 2-20 seconds
+SLEEP_TIME=$((RANDOM % 19 + 2))
+echo "Waiting ${SLEEP_TIME} seconds before starting ${GITEA_RUNNER_NAME}..."
+sleep ${SLEEP_TIME}
 
 # # Add Docker daemon cert configuration
 # DOCKER_CERT_DIR="/etc/docker/certs.d/${GITEA_HOSTNAME}"
@@ -64,18 +74,26 @@ if [[ ! -s "$RUNNER_STATE_FILE" ]]; then
   while [[ $success -eq 0 ]] && [[ $try -lt ${GITEA_MAX_REG_ATTEMPTS:-10} ]]; do
     echo "Trying to register runner (attempt $try):"
     echo -e "  act_runner register --instance ${GITEA_INSTANCE_URL} --token ${GITEA_RUNNER_REGISTRATION_TOKEN} --name ${GITEA_RUNNER_NAME:-`hostname`} ${CONFIG_ARG} ${EXTRA_ARGS} --no-interactive\n"
+
+    # disable exit on error to allow for retries
+    set +e
+    # register the runner
     act_runner register \
       --instance "${GITEA_INSTANCE_URL}" \
       --token    "${GITEA_RUNNER_REGISTRATION_TOKEN}" \
       --name     "${GITEA_RUNNER_NAME:-`hostname`}" \
       ${CONFIG_ARG} ${EXTRA_ARGS} --no-interactive 2>&1 | tee /tmp/reg.log
+    # re-enable exit on error
+    set -e
 
+    # check if the runner was registered successfully
     cat /tmp/reg.log | grep 'Runner registered successfully' > /dev/null
     if [[ $? -eq 0 ]]; then
       echo "SUCCESS"
       success=1
     else
-      echo "Waiting to retry ..."
+      SLEEP_TIME=$((RANDOM % 26 + 5))
+      echo "Waiting ${SLEEP_TIME} seconds before retry..."
       sleep 5
     fi
   done
