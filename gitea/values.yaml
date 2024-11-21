@@ -230,6 +230,102 @@ initPreScript: ""
 #   chown -R git:git /data/git/.postgresql/
 #   chmod 400 /data/git/.postgresql/postgresql.key
 
+# Configure Gitea Actions
+# - must enable persistence if the job is enabled
+## @section Gitea Actions
+#
+## @param actions.enabled Create an act runner StatefulSet.
+## @param actions.init.image.repository The image used for the init containers
+## @param actions.init.image.tag The image tag used for the init containers
+## @param actions.statefulset.annotations Act runner annotations
+## @param actions.statefulset.labels Act runner labels
+## @param actions.statefulset.resources Act runner resources
+## @param actions.statefulset.nodeSelector NodeSelector for the statefulset
+## @param actions.statefulset.tolerations Tolerations for the statefulset
+## @param actions.statefulset.affinity Affinity for the statefulset
+## @param actions.statefulset.actRunner.repository The Gitea act runner image
+## @param actions.statefulset.actRunner.tag The Gitea act runner tag
+## @param actions.statefulset.actRunner.pullPolicy The Gitea act runner pullPolicy
+## @param actions.statefulset.actRunner.config [default: Too complex. See values.yaml] Act runner custom configuration. See [Act Runner documentation](https://docs.gitea.com/usage/actions/act-runner#configuration) for details.
+## @param actions.statefulset.dind.repository The Docker-in-Docker image
+## @param actions.statefulset.dind.tag The Docker-in-Docker image tag
+## @param actions.statefulset.dind.pullPolicy The Docker-in-Docker pullPolicy
+## @param actions.statefulset.dind.extraEnvs Allows adding custom environment variables, such as `DOCKER_IPTABLES_LEGACY`
+## @param actions.provisioning.enabled Create a job that will create and save the token in a Kubernetes Secret
+## @param actions.provisioning.annotations Job's annotations
+## @param actions.provisioning.labels Job's labels
+## @param actions.provisioning.resources Job's resources
+## @param actions.provisioning.nodeSelector NodeSelector for the job
+## @param actions.provisioning.tolerations Tolerations for the job
+## @param actions.provisioning.affinity Affinity for the job
+## @param actions.provisioning.ttlSecondsAfterFinished ttl for the job after finished in order to allow helm to properly recognize that the job completed
+## @param actions.provisioning.publish.repository The image that can create the secret via kubectl
+## @param actions.provisioning.publish.tag The publish image tag that can create the secret
+## @param actions.provisioning.publish.pullPolicy The publish image pullPolicy that can create the secret
+## @param actions.existingSecret Secret that contains the token
+## @param actions.existingSecretKey Secret key
+actions:
+  enabled: true
+  statefulset:
+    annotations: {}
+    labels: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    actRunner:
+      repository: gitea/act_runner
+      tag: 0.2.11
+      pullPolicy: IfNotPresent
+
+      config: |
+        log:
+          level: debug
+        cache:
+          enabled: false
+        runner:
+          labels:
+            - "ubuntu-latest"
+
+    dind:
+      repository: docker
+      tag: 25.0.2-dind
+      pullPolicy: IfNotPresent
+      # If the container keeps crashing in your environment, you might have to add the `DOCKER_IPTABLES_LEGACY` environment variable.
+      # See https://github.com/docker-library/docker/issues/463#issuecomment-1881909456
+      extraEnvs: []
+        #  - name: "DOCKER_IPTABLES_LEGACY"
+        #    value: "1"
+
+  init:
+    image:
+      repository: busybox
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: "1.36.1"
+
+  provisioning:
+    enabled: false
+
+    annotations: {}
+    labels: {}
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+
+    publish:
+      repository: bitnami/kubectl
+      tag: 1.29.0
+      pullPolicy: IfNotPresent
+
+    ttlSecondsAfterFinished: 300
+
+  ## Specify an existing token secret
+  ##
+  existingSecret: ""
+  existingSecretKey: ""
+
 ## @section Gitea
 #
 gitea:
