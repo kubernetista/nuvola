@@ -10,8 +10,7 @@ spec:
   source:
     path: whoami
     repoURL: https://github.com/kubernetista/nuvola.git
-    targetRevision: main
-    # targetRevision: HEAD
+    targetRevision: dev
   destination:
     name: "in-cluster"
     namespace: default

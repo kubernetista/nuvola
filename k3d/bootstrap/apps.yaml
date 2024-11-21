@@ -10,6 +10,7 @@ spec:
   source:
     path: apps/
     repoURL: https://github.com/kubernetista/nuvola.git
+    targetRevision: dev
   syncPolicy:
     automated:
       prune: true

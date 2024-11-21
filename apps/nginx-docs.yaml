@@ -8,7 +8,7 @@ spec:
   source:
     # repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/debug-shell.git
     repoURL: https://github.com/kubernetista/nuvola.git
-    targetRevision: HEAD
+    targetRevision: dev
     path: nginx-docs
   destination:
     name: "in-cluster"

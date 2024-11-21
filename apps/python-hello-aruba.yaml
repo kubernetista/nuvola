@@ -10,6 +10,7 @@ spec:
   source:
     path: deploy/base
     repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/python-hello-aruba.git
+    targetRevision: main
   syncPolicy:
     automated:
       prune: true

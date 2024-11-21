@@ -8,7 +8,7 @@ spec:
   source:
     # repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/debug-shell.git
     repoURL: https://github.com/kubernetista/debug-shell.git
-    targetRevision: HEAD
+    targetRevision: main
     path: kustomize
     # kustomize:
     #   namePrefix: debug-shell-

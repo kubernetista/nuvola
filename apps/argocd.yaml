@@ -18,7 +18,7 @@ spec:
       - $values/argocd/values.yaml
       # - values.yaml
   - repoURL: https://github.com/kubernetista/nuvola.git
-    targetRevision: main
+    targetRevision: dev
     ref: values
   destination:
     name: "in-cluster"
