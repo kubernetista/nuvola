@@ -230,6 +230,9 @@ initPreScript: ""
 #   chown -R git:git /data/git/.postgresql/
 #   chmod 400 /data/git/.postgresql/postgresql.key
 
+
+# actions.existingSecret and actions.existingSecretKey are required when provisioning is disabled
+
 # Configure Gitea Actions
 # - must enable persistence if the job is enabled
 ## @section Gitea Actions
@@ -305,7 +308,7 @@ actions:
       tag: "1.36.1"
 
   provisioning:
-    enabled: false
+    enabled: true
 
     annotations: {}
     labels: {}
