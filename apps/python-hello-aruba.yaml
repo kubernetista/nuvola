@@ -4,13 +4,13 @@ metadata:
   name: python-hello-aruba
   namespace: argocd
 spec:
-  destination:
-    server: https://kubernetes.default.svc
   project: default
   source:
-    path: deploy/base
     repoURL: http://gitea-http.git.svc.cluster.local:3000/aruba-demo/python-hello-aruba.git
     targetRevision: main
+    path: deploy/base
+  destination:
+    server: https://kubernetes.default.svc
   syncPolicy:
     automated:
       prune: true
