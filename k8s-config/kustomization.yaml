@@ -8,3 +8,4 @@ resources:
 - external-secret-tls-wildcard-localtest-me.yaml
 - external-secret-gitea-admin-credentials.yaml
 - external-secret-db-credentials.yaml
+- ingress-vault-external.yaml
