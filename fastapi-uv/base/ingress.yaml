@@ -5,9 +5,13 @@ metadata:
   name: fastapi-uv
   namespace: fastapi-uv
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   ingressClassName: traefik
+  tls:
+  - hosts:
+    - fastapi-uv.localtest.me
+    secretName: tls-wildcard-localtest-me
   rules:
     - host: "*.localhost"
       http:
