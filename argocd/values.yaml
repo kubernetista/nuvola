@@ -61,10 +61,10 @@ configs:
     # -- Bcrypt hashed admin password
     ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
     ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
-    argocdServerAdminPassword: "$2a$10$aQt3zMbEsZLQR6evPBJgHelYt0ct/lQJazqdR72nUqhMNMqwA8jWK"
+    argocdServerAdminPassword: "JDJhJDEwJGFRdDN6TWJFc1pMUVI2ZXZQQkpnSGVsWXQwY3QvbFFKYXpxZFI3Mm5VcWhNTk1xd0E4aldL"
     # -- Admin password modification time. Eg. `"2006-01-02T15:04:05Z"`
     # @default -- `""` (defaults to current time)
-    argocdServerAdminPasswordMtime: "2024-11-22T20:25:38Z"
+    argocdServerAdminPasswordMtime: "MjAyNC0xMS0yMlQyMDoyNTozOFo="
 
   # -- Define custom [CSS styles] for your argo instance.
   # This setting will automatically mount the provided CSS and reference it in the argo configuration.
