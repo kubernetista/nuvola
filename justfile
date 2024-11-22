@@ -18,6 +18,10 @@ k3d-cluster-create:
     k3d cluster create ${K3D_CLUSTER} --config=./k3d/cluster/k3d-${K3D_CLUSTER}-cluster-config.yaml
     @kubectl cluster-info
 
+# Delete the k3d cluster
+k3d-cluster-delete:
+    k3d cluster delete ${K3D_CLUSTER}
+
 argocd-get-password:
     argocd admin initial-password -n argocd | head -n 1
 
