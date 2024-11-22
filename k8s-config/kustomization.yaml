@@ -4,8 +4,8 @@ kind: Kustomization
 
 resources:
 - cluster-secret-store.yaml
-- svc-vault-external.yaml
 - external-secret-tls-wildcard-localtest-me.yaml
 - external-secret-gitea-admin-credentials.yaml
 - external-secret-db-credentials.yaml
+- svc-vault-external.yaml
 - ingress-vault-external.yaml
