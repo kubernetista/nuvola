@@ -33,7 +33,7 @@ spec:
               cpu: "500m"
               memory: "128Mi"
           ports:
-            - containerPort: 8000
+            - containerPort: 8001
           env:
             - name: APP_NAME
               value: "fastapi-uv-1"
