@@ -27,10 +27,13 @@ just k3d-cluster-create
 ## 2. Check ArgoCD deployment progress
 
 ```sh
-# Wait until the 'argocd' namespace exists
-time until kubectl get namespace argocd >/dev/null 2>&1; do
-  sleep 1
-done
+# # Wait until the 'argocd' namespace exists
+# time until kubectl get namespace argocd >/dev/null 2>&1; do
+#   sleep 1
+# done
+
+# Wait for argocd to be ready
+kubectl wait -n argocd deploy argocd-server --for=condition=Available --timeout=20m && argocd admin initial-password -n argocd | head -n 1
 
 # Get the ArgoCD initial password
 just argocd-get-password
@@ -83,6 +86,9 @@ until kubectl get secret fake-db-credentials &> /dev/null; do
   sleep 2
 done
 kubectl get secret fake-db-credentials -o yaml | yq '.data.credentials | @base64d'
+
+
+
 
 ```
 
