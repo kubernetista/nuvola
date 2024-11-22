@@ -13,7 +13,7 @@ spec:
     - fastapi-uv.localtest.me
     secretName: tls-wildcard-localtest-me
   rules:
-    - host: "*.localhost"
+    - host: fastapi-uv.localtest.me
       http:
         paths:
           - path: /
