@@ -1,0 +1,21 @@
+# This file is currently not used, but it is here for reference.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fastapi-uv
+  namespace: fastapi-uv
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: "*.localhost"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fastapi-uv
+                port:
+                  number: 8000

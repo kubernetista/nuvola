@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-uv
+  labels:
+    app.kubernetes.io/name: "fastapi-uv"
+    app.kubernetes.io/instance: "fastapi-uv-1"
+    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/component: "frontend"
+    app.kubernetes.io/part-of: "fastapi-uv"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "fastapi-uv"
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "fastapi-uv"
+        app.kubernetes.io/instance: "fastapi-uv-1"
+        app.kubernetes.io/version: "0.1.0"
+        app.kubernetes.io/component: "frontend"
+        app.kubernetes.io/part-of: "fastapi-uv"
+    spec:
+      containers:
+        - name: fastapi-uv
+          image: ghcr.io/kubernetista/fastapi-uv:latest
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: APP_NAME
+              value: "fastapi-uv-1"
+      imagePullSecrets:
+        - name: gitlab-registry
