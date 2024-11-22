@@ -129,8 +129,8 @@ metadata:
 type: Opaque
 # Setting a blank data again will wipe admin password/key/cert
 data:
-  admin.password: SkRKaEpERXdKR0ZSZERONlRXSkZjMXBNVVZJMlpYWlFRa3BuU0dWc1dYUXdZM1F2YkZGS1lYcHhaRkkzTW01VmNXaE5UazF4ZDBFNGFsZEw=
-  admin.passwordMtime: TWpBeU5DMHhNUzB5TWxReU1Eb3lOVG96T0ZvPQ==
+  admin.password: JDJhJDEwJGFRdDN6TWJFc1pMUVI2ZXZQQkpnSGVsWXQwY3QvbFFKYXpxZFI3Mm5VcWhNTk1xd0E4aldL
+  admin.passwordMtime: MjAyNC0xMS0yMlQyMDoyNTozOFo=
 ---
 # Source: argo-cd/templates/argocd-configs/argocd-cm.yaml
 apiVersion: v1
