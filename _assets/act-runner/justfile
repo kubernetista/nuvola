@@ -41,10 +41,30 @@ stop-runner:
 build-container:
     docker compose -f {{COMPOSE_CONFIG}} build --build-arg GITEA_HOSTNAME="${GITEA_HOSTNAME}"
 
-# Start 🚀 Gitea Runner with Docker compose and stay attached
-# start-runner-docker-attached:
-#     docker compose up
+# Get runner registration token 🔑 from Gitea
+get-runner-token:
+    #!/usr/bin/env bash
+    GITEA_RUNNER_REGISTRATION_TOKEN=$(kubectl exec -n git --stdin=true --tty=true $(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name) -c gitea -- /bin/sh -c "gitea actions generate-runner-token" | tr -d '\r\n')
+    echo ${GITEA_RUNNER_REGISTRATION_TOKEN} | tr -d '\n'
 
-# # Start 🚀 Gitea Runner with Docker, detaching 🫥
-# start-runner-docker:
-#     docker compose up --detach
+# Save the runner registration token 🔑 from Gitea to 🏦 Vault
+save-runner-token:
+    #!/usr/bin/env bash
+    GITEA_RUNNER_REGISTRATION_TOKEN=$(kubectl exec -n git --stdin=true --tty=true $(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name) -c gitea -- /bin/sh -c "gitea actions generate-runner-token" | tr -d '\r\n')
+    vault kv put secret/gitea/runner-registration-token GITEA_RUNNER_REGISTRATION_TOKEN="${GITEA_RUNNER_REGISTRATION_TOKEN}"
+
+# Unregister the local Gitea Runners
+unregister-runners:
+    @fd -u .runner ./data-{0,1,2}/ | xargs rm -fv
+    @echo "Runners unregistered"
+
+# Wait until the 'git' namespace is available
+wait-for-gitea-server:
+    #!/usr/bin/env bash
+    GITEA_POD=$(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name)
+    echo "Waiting for the Gitea server to be ready..."
+    kubectl wait --timeout=600s -n git --for=condition=ready ${GITEA_POD}
+    # @until kubectl get namespace git >/dev/null 2>&1; do sleep 2; done && echo "Namespace 'git' is ready!"
+
+# Force the full lifecycle of the Gitea Runner
+full-runner-lifecycle: stop-runner unregister-runners wait-for-gitea-server save-runner-token start-runner-detached
