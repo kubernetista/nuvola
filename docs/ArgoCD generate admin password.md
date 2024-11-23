@@ -6,6 +6,8 @@ It can be set before deployment in the Helm values at:
 Reference:
 
 - <https://github.com/argoproj/argo-cd/issues/829>
+- <https://unix.stackexchange.com/questions/307994/compute-bcrypt-hash-from-command-line>
+- <https://stackoverflow.com/questions/15733196/where-2x-prefix-are-used-in-bcrypt/36225192#36225192>
 
 ```sh
 # Generate a new password
