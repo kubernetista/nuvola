@@ -1,15 +1,20 @@
 # Gitea: access the API
 
-```sh
+Reference:
 
-# set vars
+- <https://docs.gitea.com/development/api-usage#api-guide>
+- <https://gitea.com/api/swagger#/repository/updateRepoSecret>
+- <https://docs.gitea.com/usage/usage/secrets>
+
+```sh
+# Set vars
 GITEA_USERNAME="aruba-demo"
 
 GITEA_HOSTNAME="git.localtest.me"
 GITEA_USERNAME="$(op read 'op://Private/ujfrvzi2gwbjozczjg2cjl27v4/username')"
 GITEA_PASSWORD="$(op read 'op://Private/ujfrvzi2gwbjozczjg2cjl27v4/password')"
 
-# Original command
+# Starting point
 curl -H "Content-Type: application/json" -d '{"name":"test"}' -u ${GITEA_USERNAME}:${GITEA_PASSWORD} \
   https://${GITEA_HOSTNAME}/api/v1/users/${GITEA_USERNAME}/tokens
 
@@ -19,7 +24,7 @@ curl -H "Content-Type: application/json" \
   -u ${GITEA_USERNAME}:${GITEA_PASSWORD} \
   https://${GITEA_HOSTNAME}/api/v1/users/${GITEA_USERNAME}/tokens
 
-# Response
+# Successful response with token
 {"id":1,"name":"test","sha1":"9fcb1158165773dd010fca5f0cf7174316c3e37d","token_last_eight":"16c3e37d"}
 
 # ✅ Automated
