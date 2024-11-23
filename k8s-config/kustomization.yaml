@@ -8,4 +8,4 @@ resources:
 - external-secret-gitea-admin-credentials.yaml
 - external-secret-db-credentials.yaml
 - svc-vault-external.yaml
-# - ingress-vault-external.yaml
+- ingress-vault-external.yaml
