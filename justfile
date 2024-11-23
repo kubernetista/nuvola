@@ -133,22 +133,67 @@ full-runner-lifecycle: stop-runner unregister-runners wait-for-gitea-server save
 ################# 🈷️ END act-runners justflile #################
 
 
+# Get the Gitea auth token
+# gitea-get-auth-token:
+
+# Push the fastapi-uv repo to the local remote, creating the repository if it doesn't exist
+git-push-fastapi-uv:
+    @cd ../../fastapi-uv && git push -o repo.private=false -u local main
+
+# Create the secret for the pipelines
+gitea-create-secret:
+    #!/usr/bin/env bash
+
+    # Set the Gitea hostname, username, and password
+    GITEA_HOSTNAME="git.localtest.me"
+    GITEA_USERNAME="$(op read 'op://Private/ujfrvzi2gwbjozczjg2cjl27v4/username')"
+    GITEA_PASSWORD="$(op read 'op://Private/ujfrvzi2gwbjozczjg2cjl27v4/password')"
+
+    # Generate a random token suffix
+    TOKEN_SUFFIX=$(openssl rand -base64 48 | tr -dc 'a-z0-9' | head -c 6)
+
+    # Get the Gitea auth token
+    GITEA_AUTH_TOKEN=$(curl -s -H "Content-Type: application/json" \
+    -d "{\"name\":\"curl-api-${TOKEN_SUFFIX}\",\"scopes\":[\"write:repository\",\"write:user\"]}" \
+    -u "${GITEA_USERNAME}:${GITEA_PASSWORD}" \
+    "https://${GITEA_HOSTNAME}/api/v1/users/${GITEA_USERNAME}/tokens" | yq '.sha1' -r)
+
+    # Set the secret name and value
+    GITEA_SECRET_NAME="REGISTRY_PASSWORD"
+    GITEA_SECRET_VALUE="${GITEA_PASSWORD}"
+
+    # Repo specific secret
+    ENDPOINT="https://${GITEA_HOSTNAME}/api/v1/repos/${GITEA_USERNAME}/fastapi-uv/actions/secrets/${GITEA_SECRET_NAME}"
+    # Global secret (not verified)
+    # ENDPOINT="https://${GITEA_HOSTNAME}/api/v1/user/actions/secrets/${GITEA_SECRET_NAME}"
+
+    # Create the secret
+    curl -s -X PUT \
+    "${ENDPOINT}" \
+    -H "accept: application/json" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: token ${GITEA_AUTH_TOKEN}" \
+    -d "{\"data\": \"${GITEA_SECRET_VALUE}\"}"
+
+    echo "Done, but check above for any error."
+
+
 
 alias step-0 := k3d-cluster-delete
 alias step-1 := k3d-cluster-create
-# add wait for argocd to be ready
+
 alias step-2 := argocd-login-sync
-# add wait for external-secrets namespace to be ready
+
 alias step-3 := vault-create-main-secret
 alias step-4 := argocd-sync-status
-# add runners registration
 
 alias step-5 := full-runner-lifecycle
 
-# 6. add the secret for the pipelines
+alias step-6 := git-push-fastapi-uv
+alias step-7 := gitea-create-secret
 
 # Full Nuvola ☁️ setup
-full-setup: k3d-cluster-create argocd-login-sync vault-create-main-secret argocd-sync-status full-runner-lifecycle
+full-setup: k3d-cluster-create argocd-login-sync vault-create-main-secret argocd-sync-status full-runner-lifecycle git-push-local git-push-fastapi-uv gitea-create-secret
 
 
 # # Create main Vault secret (Vault_Token) from 1Password
