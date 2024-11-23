@@ -2,9 +2,9 @@
 
 # Variables
 
-# List 📜 all recipes (default)
-help:
-    @just --list
+# # List 📜 all recipes (default)
+# help:
+#     @just --list
 
 # # Start 🚀 Gitea Runner with Docker compose
 # start-runner:
@@ -26,7 +26,10 @@ help:
 # Variables
 IMAGE_NAME := "act-runner-nuvola:latest"
 # COMPOSE_CONFIG := "compose-scale.yaml"
-COMPOSE_CONFIG := "compose-double.yaml"
+COMPOSE_CONFIG := 'compose-double.yaml'
+
+##start-runner:
+##    env $(teller env) docker compose -f {{COMPOSE_CONFIG}} up
 
 start-runner:
     #!/usr/bin/env bash
@@ -45,11 +48,11 @@ start-runner-detached:
 ##     env $(teller env) teller run -- docker compose -f {{COMPOSE_CONFIG}} down
 
 stop-runner:
-    env $(teller env) teller run -- docker compose -f {{COMPOSE_CONFIG}} down
+    docker compose -f ./_assets/act-runner/compose-double.yaml down
 
 # Build the container image
 build-container:
-    docker compose -f {{COMPOSE_CONFIG}} build --build-arg GITEA_HOSTNAME="${GITEA_HOSTNAME}"
+    docker compose -f ./_assets/act-runner/compose-double.yaml build --build-arg GITEA_HOSTNAME="${GITEA_HOSTNAME}"
 
 # Get runner registration token 🔑 from Gitea
 get-runner-token:
