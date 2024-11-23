@@ -29,10 +29,20 @@ IMAGE_NAME := "act-runner-nuvola:latest"
 COMPOSE_CONFIG := "compose-double.yaml"
 
 start-runner:
-    env $(teller env) docker compose -f {{COMPOSE_CONFIG}} up
+    #!/usr/bin/env bash
+    export GITEA_RUNNER_REGISTRATION_TOKEN=$(vault kv get -field GITEA_RUNNER_REGISTRATION_TOKEN -mount="secret" "gitea/runner-registration-token")
+    docker compose -f ./_assets/act-runner/compose-double.yaml up
+
+# start-runner-detached:
+#     env $(teller env) teller run -- docker compose -f {{COMPOSE_CONFIG}} up --detach
 
 start-runner-detached:
-    env $(teller env) teller run -- docker compose -f {{COMPOSE_CONFIG}} up --detach
+    #!/usr/bin/env bash
+    export GITEA_RUNNER_REGISTRATION_TOKEN=$(vault kv get -field GITEA_RUNNER_REGISTRATION_TOKEN -mount="secret" "gitea/runner-registration-token")
+    docker compose -f ./_assets/act-runner/compose-double.yaml up --detach
+
+## stop-runner:
+##     env $(teller env) teller run -- docker compose -f {{COMPOSE_CONFIG}} down
 
 stop-runner:
     env $(teller env) teller run -- docker compose -f {{COMPOSE_CONFIG}} down
