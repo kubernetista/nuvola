@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 -
 
+## [0.4.0] - 2024-11-23
+
+### Status / Headline
+
+- Full automation of setup with justfile, 5 minutes to get everything ready
+
 ## [0.3.3] - 2024-11-19
 
 ### Status / Headline
