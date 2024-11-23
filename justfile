@@ -145,36 +145,15 @@ alias step-4 := argocd-sync-status
 
 alias step-5 := full-runner-lifecycle
 
+# 6. add the secret for the pipelines
+
 # Full Nuvola ☁️ setup
 full-setup: k3d-cluster-create argocd-login-sync vault-create-main-secret argocd-sync-status full-runner-lifecycle
 
-# 4. get runners token and start act-runners
-# 5. add the secret for the pipelines
 
 # # Create main Vault secret (Vault_Token) from 1Password
 # create-main-vault-secret:
 #     @cat ${SECRET_VAULT_TEMPORARY_TOKEN} | envsubst | op inject | kubectl apply -f -
-
-
-# ❓ Create main Vault secret (Vault_Token) from 1Password
-apply-k8s-resources:
-    kubectl apply -k k8s/
-
-# ❓ Deploy the application to the k3d cluster
-secrets-tls-deploy:
-    #!/usr/bin/env bash
-    echo "Creating TLS secret for wildcard-localtest-me"
-
-    # Switch to the directory containing the certs
-    cd ./_assets/secrets
-
-    # Create the secret containing the TLS certificate and its key
-    export CERT_NAME="wildcard-localtest-me"
-    pwd
-    kubectl apply -f secret-tls-${CERT_NAME}.yaml
-
-    # Restart Traefik to load the new cert
-    kubectl rollout restart deployment traefik -n traefik
 
 # Push the git repo to the local remote, creating the repository if it doesn't exist
 git-push-local:
