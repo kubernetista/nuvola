@@ -5,8 +5,12 @@
 ```sh
 #gitea --config /etc/gitea/app.ini actions generate-runner-token
 
+
 # After a Gitea reinstallation, get the current (old) token from Vault
 # using tr to remove both newline and carriage return
+
+kubectl exec -n git --stdin=true --tty=true $(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name) -c gitea -- /bin/sh -c "gitea actions generate-runner-token"
+
 GITEA_RUNNER_REGISTRATION_TOKEN=$(kubectl exec -n git --stdin=true --tty=true $(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name) -c gitea -- /bin/sh -c "gitea actions generate-runner-token" | tr -d '\r\n')
 
 echo ${GITEA_RUNNER_REGISTRATION_TOKEN}
@@ -37,6 +41,9 @@ vault kv get -format=json -mount="secret" "gitea/runner-registration-token" | jq
 # Check that the env var is present (via direnv and teller, requires VAULT_TOKEN to be set)
 teller env
 echo ${GITEA_RUNNER_REGISTRATION_TOKEN}
+
+# 💡 If it's a new installation over an old one, remove the old runners registration files
+fdu .runner ./data-{0,1,2}/ | xargs rm -fv
 
 # Start and register the runners
 just start-runner
