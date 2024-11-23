@@ -3,7 +3,7 @@ name: act-runner-nuvola
 
 # Shared environment configuration using YAML anchor
 x-common-env: &common-env
-  GITEA_HOSTNAME: "${GITEA_HOSTNAME}"
+  GITEA_HOSTNAME: ${GITEA_HOSTNAME}
   # GITEA_INSTANCE_URL: "https://${GITEA_HOSTNAME}/"
   # Secrets from teller
   GITEA_RUNNER_REGISTRATION_TOKEN: ${GITEA_RUNNER_REGISTRATION_TOKEN}
