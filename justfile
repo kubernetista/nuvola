@@ -64,6 +64,76 @@ argocd-login-sync: argocd-login argocd-sync
 argocd-sync-status:
     @argocd app wait apps --health --sync
 
+
+# Import the act-runner recipes
+# import './_assets/act-runner/justfile'
+
+################# BEGIN 🈷️ act-runners justflile #################
+
+# Variables
+IMAGE_NAME := "act-runner-nuvola:latest"
+# COMPOSE_CONFIG := "compose-scale.yaml"
+COMPOSE_CONFIG := './_assets/act-runner/compose-double.yaml'
+ACT_RUNNERS_VOLUME_DIR := './_assets/act-runner'
+
+##start-runner:
+##    env $(teller env) docker compose -f {{COMPOSE_CONFIG}} up
+
+start-runner:
+    #!/usr/bin/env bash
+    export GITEA_RUNNER_REGISTRATION_TOKEN=$(vault kv get -field GITEA_RUNNER_REGISTRATION_TOKEN -mount="secret" "gitea/runner-registration-token")
+    docker compose -f {{COMPOSE_CONFIG}} up
+
+# start-runner-detached:
+#     env $(teller env) teller run -- docker compose -f {{COMPOSE_CONFIG}} up --detach
+
+start-runner-detached:
+    #!/usr/bin/env bash
+    export GITEA_RUNNER_REGISTRATION_TOKEN=$(vault kv get -field GITEA_RUNNER_REGISTRATION_TOKEN -mount="secret" "gitea/runner-registration-token")
+    docker compose -f {{COMPOSE_CONFIG}} up --detach
+
+## stop-runner:
+##     env $(teller env) teller run -- docker compose -f {{COMPOSE_CONFIG}} down
+
+stop-runner:
+    docker compose -f {{COMPOSE_CONFIG}} down
+
+# Build the container image
+build-container:
+    docker compose -f {{COMPOSE_CONFIG}} build --build-arg GITEA_HOSTNAME="${GITEA_HOSTNAME}"
+
+# Get runner registration token 🔑 from Gitea
+get-runner-token:
+    #!/usr/bin/env bash
+    GITEA_RUNNER_REGISTRATION_TOKEN=$(kubectl exec -n git --stdin=true --tty=true $(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name) -c gitea -- /bin/sh -c "gitea actions generate-runner-token" | tr -d '\r\n')
+    echo ${GITEA_RUNNER_REGISTRATION_TOKEN} | tr -d '\n'
+
+# Save the runner registration token 🔑 from Gitea to 🏦 Vault
+save-runner-token:
+    #!/usr/bin/env bash
+    GITEA_RUNNER_REGISTRATION_TOKEN=$(kubectl exec -n git --stdin=true --tty=true $(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name) -c gitea -- /bin/sh -c "gitea actions generate-runner-token" | tr -d '\r\n')
+    vault kv put secret/gitea/runner-registration-token GITEA_RUNNER_REGISTRATION_TOKEN="${GITEA_RUNNER_REGISTRATION_TOKEN}"
+
+# Unregister the local Gitea Runners
+unregister-runners:
+    @fd -u .runner {{ACT_RUNNERS_VOLUME_DIR}}/data-{0,1,2}/ | xargs rm -fv
+    @echo "Runners unregistered"
+
+# Wait until the 'git' namespace is available
+wait-for-gitea-server:
+    #!/usr/bin/env bash
+    GITEA_POD=$(kubectl get pods -n git -l 'app.kubernetes.io/name=gitea,app.kubernetes.io/component!=token-job,app.kubernetes.io/instance=gitea' -o name)
+    echo "Waiting for the Gitea server to be ready..."
+    kubectl wait --timeout=600s -n git --for=condition=ready ${GITEA_POD}
+    # @until kubectl get namespace git >/dev/null 2>&1; do sleep 2; done && echo "Namespace 'git' is ready!"
+
+# Force the full lifecycle of the Gitea Runner
+full-runner-lifecycle: stop-runner unregister-runners wait-for-gitea-server save-runner-token start-runner-detached
+
+################# 🈷️ END act-runners justflile #################
+
+
+
 alias step-0 := k3d-cluster-delete
 alias step-1 := k3d-cluster-create
 # add wait for argocd to be ready
@@ -72,9 +142,6 @@ alias step-2 := argocd-login-sync
 alias step-3 := vault-create-main-secret
 alias step-4 := argocd-sync-status
 # add runners registration
-
-# Import the act-runner recipes
-import './_assets/act-runner/justfile'
 
 alias step-5 := full-runner-lifecycle
 
