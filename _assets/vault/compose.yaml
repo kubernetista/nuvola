@@ -5,9 +5,10 @@ services:
     container_name: vault
 
     environment:
-      - VAULT_ADDR=http://127.0.0.1:8200
+      - VAULT_ADDR=https://127.0.0.1:8200
       # - VAULT_API_ADDR=http://127.0.0.1:8200
       # - VAULT_LOG_LEVEL=debug
+      - VAULT_SKIP_VERIFY=true
       - HTTP_PROXY=${HTTP_PROXY:-}
       - HTTPS_PROXY=${HTTPS_PROXY:-}
       - NO_PROXY=${NO_PROXY:-}
@@ -16,6 +17,7 @@ services:
       - ./volumes/logs:/vault/logs
       - ./volumes/file:/vault/file
       - ./volumes/config:/vault/config
+      - ./volumes/tls-certs:/vault/tls-certs
 
     ports:
       - "8200:8200"
