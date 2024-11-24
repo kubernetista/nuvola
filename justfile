@@ -202,7 +202,7 @@ alias step-6 := git-push-fastapi-uv
 alias step-7 := gitea-create-secret
 
 # Full Nuvola ☁️ setup
-full-setup: k3d-cluster-create argocd-login-sync vault-create-main-secret argocd-sync-status full-runner-lifecycle git-push-local git-push-fastapi-uv gitea-create-secret
+nuvola-setup: k3d-cluster-create argocd-login-sync vault-create-main-secret argocd-sync-status full-runner-lifecycle git-push-local git-push-fastapi-uv gitea-create-secret
 
 
 # Watch the Vault secret update propagate to the test app
