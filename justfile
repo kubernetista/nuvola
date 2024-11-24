@@ -30,6 +30,10 @@ wait-for-external-secrets-namespace:
     @echo "Waiting for the 'external-secrets' namespace to be ready..."
     @until kubectl get namespace external-secrets >/dev/null 2>&1; do sleep 2; done && echo "Namespace 'external-secrets' is ready!"
 
+# # Create main Vault secret (Vault_Token) from 1Password
+# create-main-vault-secret:
+#     @cat ${SECRET_VAULT_TEMPORARY_TOKEN} | envsubst | op inject | kubectl apply -f -
+
 # Create main Vault secret (${VAULT_TOKEN}) from 1Password
 vault-create-main-secret: wait-for-external-secrets-namespace
     @yq '.data.token |= envsubst()' < ${SECRET_VAULT_TEMPORARY_TOKEN} | op inject | kubectl apply -f -
@@ -136,9 +140,14 @@ full-runner-lifecycle: stop-runner unregister-runners wait-for-gitea-server save
 # Get the Gitea auth token
 # gitea-get-auth-token:
 
+# Push the git repo to the local remote, creating the repository if it doesn't exist
+git-push-local:
+    git push -o repo.private=false -u local main
+    git push --all local
+
 # Push the fastapi-uv repo to the local remote, creating the repository if it doesn't exist
 git-push-fastapi-uv:
-    @cd ../../fastapi-uv && git push -o repo.private=false -u local main
+    @cd ../../fastapi-uv && git push -o repo.private=false -u local main && git push --all local
 
 # Create the secret for the pipelines
 gitea-create-secret:
@@ -195,14 +204,6 @@ alias step-7 := gitea-create-secret
 # Full Nuvola ☁️ setup
 full-setup: k3d-cluster-create argocd-login-sync vault-create-main-secret argocd-sync-status full-runner-lifecycle git-push-local git-push-fastapi-uv gitea-create-secret
 
-
-# # Create main Vault secret (Vault_Token) from 1Password
-# create-main-vault-secret:
-#     @cat ${SECRET_VAULT_TEMPORARY_TOKEN} | envsubst | op inject | kubectl apply -f -
-
-# Push the git repo to the local remote, creating the repository if it doesn't exist
-git-push-local:
-    git push -o repo.private=false -u local main
 
 # Watch the Vault secret update propagate to the test app
 monitor-vault-test-app:
