@@ -1,0 +1,12 @@
+# Nuvola Docs
+
+title: Welcome to Nuvola!
+
+arrange:
+    - Welcome:
+        - Welcome: "Readme-quick-setup-mark3.md"
+        - How it works: "Readme-mark1.md"
+    - Traefik:
+        - Start Traefik & Gitea runner: "TEMP-Readme-Traefik-and-Runner.md"
+    - Examples:
+        - Introduction: "Readme-Usage.md"

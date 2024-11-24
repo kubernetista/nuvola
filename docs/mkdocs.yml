@@ -1,0 +1,107 @@
+site_name: Nuvola docs
+site_url: https://docs.localtest.me/
+docs_dir: ./docs
+
+nav:
+  - Home: "index.md"
+  - Quick Start:
+    - Quick Start: "Readme.md"
+    # - How it works: "Readme-mark1.md"
+  - Installation step-by-step:
+    - Vault + External Secrets.md: "Vault-ESO.md"
+  - Traefik:
+    - Traefik: "Traefik-1.md"
+    - Start Traefik & Gitea runner: "TEMP-Readme-Traefik-and-Runner.md"
+  - Usage:
+    - Use Nuvola: "Readme-Usage.md"
+  # - Examples:
+  #   - Introduction: "Readme-Usage.md"
+  - Demo: "Demo.md"
+  - Old-Docs-Snippets.md
+  - Quick-Start-Tests.md
+  - Readme-Gitea-Runners.md
+  - Readme-k3d-k3s-bootstrap-updates.md
+  - Readme-mark1.md
+  - Readme-mark2.md
+  - TODO-Readme-Dagger-Kubernetes.md
+  - TODO-Readme-Easy-Repo-Switch.md
+  - TODO-Readme-Monitoring-and-Logging.md
+  - TODO-Readme-Registries-and-Certs.md
+
+
+markdown_extensions:
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji ""
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg ""
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+
+plugins:
+  - search
+  - awesome-pages
+  - privacy
+  # - typeset
+
+theme:
+  name: material
+  features:
+    # - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.instant
+    # - navigation.sections
+  palette:
+    # Light Mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Light mode
+      primary: amber
+      # primary: blue
+      # accent: indigo
+      accent: deep orange
+      background: white
+      text: black
+
+    # Dark Mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Dark mode
+      primary: amber
+      # primary: blue
+      # accent: indigo
+      accent: deep orange
+  font:
+    # text: Merriweather Sans
+    text: DM Sans
+    # text: 'Roboto, sans-serif'
+    code: Fira Code
+    # code: Red Hat Mono
+    # code: 'Roboto Mono, monospace'
+  icon:
+    repo: fontawesome/brands/github
+  # logo: ":material-cloud:"
+  logo: assets/cloud.svg
+  # favicon: 'images/favicon.ico'
+  search: true
+
+extra:
+  generator: true
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/kubernetista/nuvola
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/nuvola-fastapi-uv
+
+extra_css:
+  - stylesheets/extra.css
+

@@ -1,0 +1,9 @@
+[project]
+name = "nuvola-docs"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "mkdocs-awesome-pages-plugin>=2.9.3",
+    "mkdocs-material>=9.5.40",
+]

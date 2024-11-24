@@ -1,19 +1,24 @@
 # Required CLI tools
 
+- k3d
 - argocd
-- bitwarden-cli (?)
 - curl
 - direnv
 - fd
 - git
-- httpie
-- jq
 - just
 - kubectl
 - op (1password CLI)
+- bitwarden-cli (?)
 - pwgen
 - rg
 - tailscale
-- teller (v1.5.6 NOT v2.x.x !)
 - vault
+- teller@1.5.6 (Not 2.x.x)
 - yq
+- jq
+- gh
+
+## ?
+
+- httpie

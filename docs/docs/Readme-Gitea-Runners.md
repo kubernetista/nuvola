@@ -1,5 +1,52 @@
 # Gitea Runner
 
+# Setup in kubernetes
+
+Get the registration token from:
+
+Site Administration -> Actions -> Runners
+
+- <https://git.localtest.me/admin/actions/runners>
+
+```sh
+# set env var
+export RUNNER_TOKEN="aAbBcCdDeEfFgG"
+
+# update the yaml manifests
+./_scripts/gitea-runner.sh
+
+# Commit and push
+git add gitea-runner/deploy-root.yaml gitea-runner/secret-runner-token.yaml
+git commit -m "update gitea runner config"
+git push origin
+
+# refresh gitea-runner app in ArgoCD (or wait a few minutes)
+```
+
+The Gitea Act Runner should become visible in Active state in the Gitea Runners page.
+
+# Get the token and register the runner via script
+
+```sh
+#!/usr/bin/env bash
+
+# get the gitea server pod name
+POD_NAME=$(kubectl get pods -n git -l app.kubernetes.io/name=gitea -o jsonpath="{.items[0].metadata.
+name}")
+# get the token using the gitea cli
+GITEA_RUNNER_TOKEN=$(kubectl exec --stdin=true --tty=true -n git $POD_NAME -c  gitea -- /bin/sh -c "gitea actions generate-runner-token")
+echo ${GITEA_RUNNER_TOKEN}
+# Register
+act_runner register --no-interactive --token  ${GITEA_RUNNER_TOKEN} --instance https://git.localtest.me/
+# Start
+sudo act_runner daemon --config ./runner-config.yaml
+
+```
+
+## Runner docker images
+
+- <https://github.com/catthehacker/docker_images/pkgs/container/ubuntu>
+
 ## Reference
 
 - <https://gitea.com/gitea/act_runner/src/branch/main/examples/kubernetes>
