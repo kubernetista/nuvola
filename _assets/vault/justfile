@@ -28,6 +28,9 @@ vault-init:
     #@-VAULT_ADDR='http://127.0.0.1:8200' vault operator init
     @-docker exec -it vault vault operator init
 
+
+# as i enabled the tls and the cert, operations from the container fail because of
+#  tls: failed to verify certificate: x509: certificate signed by unknown authority
 # Unseal the Vault
 vault-unseal:
     @echo "\n🔒 Unseal Vault - step 1/3"
