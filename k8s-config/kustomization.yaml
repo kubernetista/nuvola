@@ -9,3 +9,4 @@ resources:
 - external-secret-db-credentials.yaml
 - svc-vault-external.yaml
 - ingress-vault-external.yaml
+- cm-vault-ca.yaml
