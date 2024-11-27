@@ -1,33 +1,26 @@
 site_name: Nuvola docs
 site_url: https://docs.localtest.me/
-docs_dir: ./docs
+docs_dir: ./content
 
 nav:
-  - Home: "index.md"
+  - Home: index.md
   - Quick Start:
-    - Quick Start: "Readme.md"
+    - Quick Start: Readme.md
     # - How it works: "Readme-mark1.md"
   - Installation step-by-step:
-    - Vault + External Secrets.md: "Vault-ESO.md"
+    - Vault + External Secrets.md: Vault-ESO.md
   - Traefik:
-    - Traefik: "Traefik-1.md"
-    - Start Traefik & Gitea runner: "TEMP-Readme-Traefik-and-Runner.md"
+    - Traefik: Traefik-1.md
+    - Start Traefik & Gitea runner: TEMP-Readme-Traefik-and-Runner.md
   - Usage:
-    - Use Nuvola: "Readme-Usage.md"
+    - Use Nuvola: Readme-Usage.md
   # - Examples:
   #   - Introduction: "Readme-Usage.md"
-  - Demo: "Demo.md"
-  - Old-Docs-Snippets.md
+  - Demo: Demo.md
   - Quick-Start-Tests.md
   - Readme-Gitea-Runners.md
   - Readme-k3d-k3s-bootstrap-updates.md
-  - Readme-mark1.md
-  - Readme-mark2.md
-  - TODO-Readme-Dagger-Kubernetes.md
-  - TODO-Readme-Easy-Repo-Switch.md
-  - TODO-Readme-Monitoring-and-Logging.md
-  - TODO-Readme-Registries-and-Certs.md
-
+  - Tests (emoji): emoji.md
 
 markdown_extensions:
   - attr_list
@@ -45,7 +38,9 @@ markdown_extensions:
 
 plugins:
   - search
-  - awesome-pages
+  - awesome-pages:
+      collapse_single_pages: true
+      strict: false
   - privacy
   # - typeset
 
@@ -81,10 +76,13 @@ theme:
       # accent: indigo
       accent: deep orange
   font:
+    # text: Space Mono
+    text: 'SF Pro, DM Sans, Roboto, sans-serif'
+    # text: "SF Pro, Roboto, DM Sans"
+    # text: "ZZSF Proz, Roboto, DM Sans"
     # text: Merriweather Sans
-    text: DM Sans
     # text: 'Roboto, sans-serif'
-    code: Fira Code
+    code: 'Fira Code, Roboto Mono, monospace'
     # code: Red Hat Mono
     # code: 'Roboto Mono, monospace'
   icon:
@@ -103,5 +101,4 @@ extra:
       link: https://pypi.org/project/nuvola-fastapi-uv
 
 extra_css:
-  - stylesheets/extra.css
-
+  - assets/extra.css
