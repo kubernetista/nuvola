@@ -1,0 +1,4 @@
+title: Archive
+collapse: true
+arrange:
+  - "*.md"
