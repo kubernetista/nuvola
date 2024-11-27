@@ -105,18 +105,34 @@ The certificate will last 20 days (for security reasons) but you can adjust it.
     🛫 If you already have a valid certificate, for example because you already generated
     it following the steps below, then jump to [__step 4__](#4-install-the-certificates-and-reload-traefik) 🛫
 
-## 3. Generate the certs
+## 3. Generate the certs (regenerate expired certs)
 
 ```sh
 # Generate the certs with expiration in 20gg using kixelated/mkcert
 cd kixelated-mkcert
 
 # Generate
-./mkcert -days=20 "*.localtest.me"
+DAYS=120
+./mkcert -days=${DAYS} "*.localtest.me"
 
 # Check
 openssl x509 -in _wildcard.localtest.me.pem -noout -text | bat -l yaml
 
+# Store the cert and the key in Vault
+export VAULT_ADDR="http://127.0.0.1:8200"
+vault kv put secret/tls/wildcard-localtest-me tls.crt=@./_wildcard.localtest.me.pem tls.key=@./_wildcard.localtest.me-key.pem
+
+# Delete the TLS secret to have it recreated from the data in Vault
+kubectl delete secret tls-wildcard-localtest-me -n default
+# kubectl delete ExternalSecret tls-wildcard-localtest-me -n default
+
+# Restart Traefik
+# kubectl rollout restart deployment traefik -n traefik
+```
+
+Old procedure 💾
+
+```sh
 # Copy the files to the nuvola repo, in a directory excluded from git
 cp _wildcard.localtest.me* ../_nuvola/nuvola/_assets/secrets/
 
