@@ -214,3 +214,90 @@ stern -t -n external-secrets external-secrets
 viddy -n 5 -dbs 'http https://vault-test.localtest.me/ | tidy -qi -w 0 --tidy-mark no -f /dev/null | bat -pP --color=always'
 
 ```
+
+## Temporary token
+
+This token is used in the one used in the ArgoCD deployment by the External Secrets Operator to access Vault
+It's the value assigned to `${VAULT_TEMPORARY_TOKEN}`
+And is saved to the file referenced in `${SECRET_VAULT_TEMPORARY_TOKEN}`(`k8s-secrets/secret-VaultToken.yaml`)
+
+```sh
+# Create the temporary token
+vault token create -policy=default -ttl=480h
+#:
+Key                  Value
+---                  -----
+token                hvs.CAESIN8kot5tZbDptTaFh4z [...]
+token_accessor       cxUqQoV2syt3SWhADtUAsJqQ
+token_duration       480h
+token_renewable      true
+token_policies       ["default"]
+identity_policies    []
+policies             ["default"]
+
+# Lookup using the token
+vault token lookup 'hvs.CAESIN8kot5tZbDptTaFh4z [...]'
+#:
+Key                 Value
+---                 -----
+accessor            cxUqQoV2syt3SWhADtUAsJqQ
+creation_time       1732701698
+creation_ttl        480h
+display_name        token
+entity_id           n/a
+expire_time         2024-12-17T10:01:38.962048471Z
+explicit_max_ttl    0s
+id                  hvs.CAESIN8kot5tZbDptTaFh4z [...]
+issue_time          2024-11-27T10:01:38.962057451Z
+meta                <nil>
+num_uses            0
+orphan              false
+path                auth/token/create
+policies            [default]
+renewable           true
+ttl                 479h59m35s
+type                service
+
+# Lookup using the accessor
+vault token lookup -accessor cxUqQoV2syt3SWhADtUAsJqQ
+#:
+Key                 Value
+---                 -----
+accessor            cxUqQoV2syt3SWhADtUAsJqQ
+creation_time       1732701698
+creation_ttl        480h
+display_name        token
+entity_id           n/a
+expire_time         2024-12-17T10:01:38.962048471Z
+explicit_max_ttl    0s
+id                  n/a
+issue_time          2024-11-27T10:01:38.962057451Z
+meta                <nil>
+num_uses            0
+orphan              false
+path                auth/token/create
+policies            [default]
+renewable           true
+ttl                 479h48m2s
+type                service
+
+```
+
+## Apply the new token
+
+The new token needs to be encoded in base64 and stored in the following field:
+`VAULT_TEMPORARY_TOKEN="op://geenehnk4nrnbhzs3vap4xrhue/5cwbkffglxytu7qixruvxgchwa/i62pkszxul24avig7zndujti6i"`
+
+That is:
+`"op://Nuvola/Vault Initial Root Token and Unseal Keys/i62pkszxul24avig7zndujti6i"`
+
+```sh
+# Update the secret
+just vault-create-main-secret
+
+# Log into ArgoCD
+argocd login --insecure --grpc-web --username admin argocd.localtest.me --password $(op read ${ARGOCD_ADMIN_PASSWORD})
+
+# Delete the app and let ArgoCD regenerate it
+argocd app delete k8s-config
+```
